@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 1 · Procure-to-Pay Fundamentals</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#16214E; --ink-soft:#3D4B7D; --paper:#F4F6FA; --card:#FFFFFF;
+  --pink:#E23D7B; --teal:#0E9384; --amber:#B45309; --line:#D7DDEB;
+  --mono:'IBM Plex Mono',monospace; --body:'IBM Plex Sans',sans-serif; --disp:'Archivo',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:var(--body);background:var(--paper);color:var(--ink);overflow:hidden}
+.progress{position:fixed;top:0;left:0;height:4px;background:var(--pink);width:0;z-index:50;transition:width .25s ease}
+.deck{position:relative;height:100vh;width:100vw}
+.slide{position:absolute;inset:0;padding:64px 84px 96px;display:none;flex-direction:column;overflow:auto}
+.slide.active{display:flex}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--pink);margin-bottom:14px;font-weight:600}
+h1{font-family:var(--disp);font-weight:900;font-size:clamp(40px,5.4vw,68px);line-height:1.02;letter-spacing:-.02em;margin-bottom:20px}
+h2{font-family:var(--disp);font-weight:800;font-size:clamp(28px,3.4vw,42px);line-height:1.05;letter-spacing:-.015em;margin-bottom:22px}
+h3{font-family:var(--disp);font-weight:700;font-size:18px;margin-bottom:8px}
+p.lead{font-size:19px;line-height:1.55;color:var(--ink-soft);max-width:62ch}
+p,li{font-size:15.5px;line-height:1.55;color:var(--ink-soft)}
+li{margin-bottom:8px}
+ul,ol{padding-left:20px;margin-top:6px}
+strong{color:var(--ink);font-weight:600}
+.cols{display:grid;gap:22px;margin-top:22px}
+.cols.c2{grid-template-columns:1fr 1fr}
+.cols.c3{grid-template-columns:1fr 1fr 1fr}
+.cols.c4{grid-template-columns:repeat(4,1fr)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px 22px}
+.card h3{display:flex;align-items:center;gap:8px}
+.stamp{display:inline-block;font-family:var(--mono);font-weight:600;font-size:12px;letter-spacing:.12em;color:var(--pink);border:2px solid var(--pink);border-radius:6px;padding:3px 9px;transform:rotate(-3deg);background:rgba(226,61,123,.05)}
+.stamp.teal{color:var(--teal);border-color:var(--teal);background:rgba(14,147,132,.06)}
+.stamp.navy{color:var(--ink);border-color:var(--ink);background:rgba(22,33,78,.04)}
+.stamp.amber{color:var(--amber);border-color:var(--amber);background:rgba(180,83,9,.06)}
+.rail{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:26px 0 8px}
+.rail .stop{font-family:var(--mono);font-size:12.5px;font-weight:600;letter-spacing:.06em;padding:8px 13px;border:1.5px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink-soft)}
+.rail .stop.on{border-color:var(--pink);color:var(--pink);background:rgba(226,61,123,.06);transform:rotate(-2deg)}
+.rail .arr{color:var(--line);font-weight:700}
+table{border-collapse:collapse;width:100%;margin-top:18px;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:14.5px}
+th{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;text-align:left;padding:12px 16px;background:var(--ink);color:#fff;font-weight:600}
+td{padding:11px 16px;border-top:1px solid var(--line);color:var(--ink-soft);line-height:1.45;vertical-align:top}
+td:first-child{color:var(--ink);font-weight:600}
+code,.mono{font-family:var(--mono);font-size:.92em;background:rgba(22,33,78,.06);padding:1px 6px;border-radius:4px;color:var(--ink)}
+pre{font-family:var(--mono);font-size:13.5px;line-height:1.6;background:#101733;color:#DCE4FF;border-radius:10px;padding:20px 22px;overflow:auto;margin-top:16px}
+pre .c{color:#7D8BC4}
+.kpi{font-family:var(--mono);font-weight:600;font-size:30px;color:var(--ink)}
+.footer-note{margin-top:auto;padding-top:24px;font-family:var(--mono);font-size:12px;color:#8B94B8;letter-spacing:.05em}
+.nav{position:fixed;bottom:20px;right:24px;display:flex;gap:8px;align-items:center;z-index:60}
+.nav button{font-family:var(--mono);font-size:14px;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);border-radius:8px;padding:8px 14px;cursor:pointer}
+.nav button:hover{background:var(--ink);color:#fff}
+.nav button:focus-visible{outline:3px solid var(--pink);outline-offset:2px}
+.counter{font-family:var(--mono);font-size:12.5px;color:var(--ink-soft);margin-right:6px}
+.home{position:fixed;bottom:20px;left:24px;font-family:var(--mono);font-size:12.5px;color:var(--ink-soft);text-decoration:none;z-index:60;border-bottom:1px dashed var(--ink-soft)}
+.home:hover{color:var(--pink);border-color:var(--pink)}
+.tag{font-family:var(--mono);font-size:11.5px;font-weight:600;letter-spacing:.08em;padding:2px 8px;border-radius:99px;border:1px solid var(--line);color:var(--ink-soft)}
+.big-flow{display:flex;flex-direction:column;gap:12px;margin-top:24px}
+.big-flow .step{display:grid;grid-template-columns:120px 1fr;gap:18px;align-items:start;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--pink);border-radius:10px;padding:14px 18px}
+.big-flow .step .n{font-family:var(--mono);font-weight:600;font-size:13px;color:var(--pink);letter-spacing:.06em;padding-top:2px}
+.callout{border-left:4px solid var(--teal);background:rgba(14,147,132,.07);border-radius:0 10px 10px 0;padding:16px 20px;margin-top:20px}
+.callout.warn{border-color:var(--amber);background:rgba(180,83,9,.07)}
+.callout p{color:var(--ink)}
+@media (max-width:900px){.slide{padding:40px 26px 96px}.cols.c2,.cols.c3,.cols.c4{grid-template-columns:1fr}.big-flow .step{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.progress{transition:none}}
+</style>
+</head>
+<body>
+<div class="progress" id="bar"></div>
+<a class="home" href="index.html">← learning path</a>
+<div class="deck" id="deck">
+
+<!-- 1 -->
+<section class="slide">
+  <div class="eyebrow">Module 1 of 4 · Self-study · ~2 hours</div>
+  <h1>Procure-to-Pay<br>Fundamentals</h1>
+  <p class="lead">Before you write a line of code, become the person on the team who actually understands what a purchase order is, why finance blocks invoices, and what "3-way match" means. This module makes you dangerous in domain conversations.</p>
+  <div class="rail">
+    <span class="stop on">PR</span><span class="arr">→</span>
+    <span class="stop on">RFQ</span><span class="arr">→</span>
+    <span class="stop on">PO</span><span class="arr">→</span>
+    <span class="stop on">GRN</span><span class="arr">→</span>
+    <span class="stop on">INV</span><span class="arr">→</span>
+    <span class="stop on">PAY</span>
+  </div>
+  <div class="footer-note">Navigate with → and ← arrow keys, or the buttons bottom-right.</div>
+</section>
+
+<!-- 2 -->
+<section class="slide">
+  <div class="eyebrow">Orientation</div>
+  <h2>What is Procure-to-Pay?</h2>
+  <p class="lead">Procure-to-Pay (P2P) is the end-to-end business process that starts when someone in the company <strong>needs</strong> something and ends when the supplier is <strong>paid</strong> for delivering it.</p>
+  <div class="cols c3">
+    <div class="card"><h3>Procure</h3><p>Deciding what to buy, from whom, at what price, with whose approval. Owned mostly by the <strong>purchasing / procurement</strong> team.</p></div>
+    <div class="card"><h3>Receive</h3><p>Confirming the goods or services actually arrived, in the right quantity and quality. Owned by <strong>stores / operations</strong>.</p></div>
+    <div class="card"><h3>Pay</h3><p>Verifying the supplier's invoice against what was ordered and received, then releasing payment. Owned by <strong>accounts payable (AP)</strong> in finance.</p></div>
+  </div>
+  <div class="callout"><p><strong>Key mental model:</strong> P2P is a chain of documents. Each document authorises the next one. Your app's job is to create, route, match, and audit these documents.</p></div>
+</section>
+
+<!-- 3 -->
+<section class="slide">
+  <div class="eyebrow">Why it matters</div>
+  <h2>Why companies invest in a P2P system</h2>
+  <div class="cols c2">
+    <div class="card"><h3><span class="stamp navy">CONTROL</span></h3><p>Nobody can spend company money without an approved document trail. No "surprise invoices" at month end. Every rupee is authorised <em>before</em> it's committed.</p></div>
+    <div class="card"><h3><span class="stamp teal">SAVINGS</span></h3><p>Competitive quotes (RFQs) and negotiated rates typically save 3–10% on spend. Matching catches over-billing, duplicate invoices, and wrong prices.</p></div>
+    <div class="card"><h3><span class="stamp navy">COMPLIANCE</span></h3><p>GST input credit needs valid invoices. TDS must be deducted correctly. MSME vendors must be paid within statutory timelines. Auditors want a clean trail.</p></div>
+    <div class="card"><h3><span class="stamp teal">SPEED</span></h3><p>"Touchless" processing — invoices that flow from email to payment with zero human touches — cuts cycle time from weeks to days and frees the AP team for exceptions.</p></div>
+  </div>
+  <div class="callout"><p>Look back at the reference dashboard: <strong>Touchless rate, Pending approvals, Avg cycle time, MSME at risk, Budget utilization, Sourcing savings</strong> — every KPI card is one of these four goals, measured.</p></div>
+</section>
+
+<!-- 4 -->
+<section class="slide">
+  <div class="eyebrow">The backbone</div>
+  <h2>The P2P lifecycle — nine steps</h2>
+  <div class="big-flow">
+    <div class="step"><span class="n">01 · NEED</span><p>An employee or department needs goods/services — laptops, raw material, a marketing agency.</p></div>
+    <div class="step"><span class="n">02 · PR</span><p><strong>Purchase Requisition</strong> — an internal request: "please buy this". Not yet a commitment to any vendor.</p></div>
+    <div class="step"><span class="n">03 · APPROVAL</span><p>The PR is routed through an <strong>approval matrix</strong> based on amount, category, and department budget.</p></div>
+    <div class="step"><span class="n">04 · RFQ</span><p><strong>Request for Quotation</strong> — sent to shortlisted vendors; their quotes are compared to pick a winner.</p></div>
+    <div class="step"><span class="n">05 · PO</span><p><strong>Purchase Order</strong> — a legally binding order to the chosen vendor: items, quantities, prices, terms.</p></div>
+    <div class="step"><span class="n">06 · GRN</span><p><strong>Goods Receipt Note</strong> — stores confirms what physically arrived (or a service entry sheet for services).</p></div>
+    <div class="step"><span class="n">07 · INVOICE</span><p>The vendor sends their invoice — usually as a PDF over email. It must be captured and digitised.</p></div>
+    <div class="step"><span class="n">08 · MATCH</span><p><strong>2-way / 3-way matching</strong> — invoice vs PO vs GRN. Match → approve. Mismatch → exception queue.</p></div>
+    <div class="step"><span class="n">09 · PAY</span><p>Payment run per due dates and terms; TDS deducted; posted to the ERP; vendor remittance advice sent.</p></div>
+  </div>
+</section>
+
+<!-- 5 -->
+<section class="slide">
+  <div class="eyebrow">Step 02 · <span class="stamp">PR</span></div>
+  <h2>Purchase Requisition</h2>
+  <p class="lead">The PR is an <strong>internal</strong> document. It never goes to a vendor. It answers: who wants what, why, by when, and against which budget.</p>
+  <div class="cols c2">
+    <div class="card"><h3>A PR typically contains</h3>
+      <ul>
+        <li><strong>Requester</strong> + department + cost centre</li>
+        <li><strong>Line items</strong>: item/description, quantity, unit, estimated price</li>
+        <li><strong>Need-by date</strong> and delivery location</li>
+        <li><strong>Budget line</strong> it will consume</li>
+        <li>Justification / attachments (specs, screenshots)</li>
+      </ul>
+    </div>
+    <div class="card"><h3>Design implications for your app</h3>
+      <ul>
+        <li>PR has a <strong>status lifecycle</strong>: Draft → Submitted → Approved / Rejected / Returned</li>
+        <li>Approved PR <strong>commits budget</strong> (soft-blocks the amount)</li>
+        <li>One PR can split into multiple RFQs or POs; keep line-level links</li>
+        <li>Catalog items vs free-text items — catalog reduces junk data</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 6 -->
+<section class="slide">
+  <div class="eyebrow">Step 03</div>
+  <h2>Approvals & the Delegation of Authority</h2>
+  <p class="lead">Every company has a <strong>DOA (Delegation of Authority)</strong> — a policy saying who may approve how much. Your workflow engine encodes it.</p>
+  <table>
+    <tr><th>Amount (₹)</th><th>Approver chain (example)</th><th>Notes</th></tr>
+    <tr><td>Up to 25,000</td><td>Department manager</td><td>Single-step, auto-remind after 24h</td></tr>
+    <tr><td>25,001 – 2,00,000</td><td>Manager → Department head</td><td>Sequential approval</td></tr>
+    <tr><td>2,00,001 – 10,00,000</td><td>Manager → Dept head → Finance controller</td><td>Finance checks budget availability</td></tr>
+    <tr><td>Above 10,00,000</td><td>… → CFO / Director</td><td>May require committee note</td></tr>
+  </table>
+  <div class="cols c2">
+    <div class="card"><h3>Concepts you must model</h3><ul><li><strong>Sequential vs parallel</strong> approvals</li><li><strong>Delegation</strong> (approver on leave → substitute)</li><li><strong>Escalation</strong> on SLA breach</li><li><strong>Auto-approval</strong> below a threshold (drives touchless rate)</li></ul></div>
+    <div class="card"><h3>Golden rule</h3><p>The person who <em>requests</em> can never be the person who <em>approves</em>, and the person who approves the PO should not be the one who confirms receipt. This is called <strong>segregation of duties (SoD)</strong> — auditors will test your app for it.</p></div>
+  </div>
+</section>
+
+<!-- 7 -->
+<section class="slide">
+  <div class="eyebrow">Step 04 · <span class="stamp">RFQ</span></div>
+  <h2>Sourcing: RFI vs RFQ vs RFP</h2>
+  <table>
+    <tr><th>Document</th><th>Question it asks vendors</th><th>When used</th></tr>
+    <tr><td>RFI — Request for Information</td><td>"What can you do? Tell us about yourselves."</td><td>Discovering the market; new category</td></tr>
+    <tr><td>RFQ — Request for Quotation</td><td>"Here's exactly what we need — what's your price?"</td><td>Well-defined goods/services; price is the main variable</td></tr>
+    <tr><td>RFP — Request for Proposal</td><td>"Here's our problem — propose a solution and price."</td><td>Complex services, solutions with many approaches</td></tr>
+  </table>
+  <div class="callout"><p>Your app (and its AI comparison module in Module 3) focuses on the <strong>RFQ</strong>: structured line items sent to 3+ vendors, quotes received, compared side-by-side, one vendor awarded.</p></div>
+  <div class="cols c2">
+    <div class="card"><h3>RFQ contents</h3><ul><li>Line items with specs, qty, unit</li><li>Delivery location & required date</li><li>Quote submission deadline</li><li>Commercial terms asked for: payment terms, freight, warranty, validity</li></ul></div>
+    <div class="card"><h3>Quote comparison basics</h3><ul><li>Never compare bare unit prices — compute <strong>landed cost</strong> (price + tax + freight + other charges)</li><li>Score non-price factors: delivery time, payment terms, vendor rating</li><li>Record the <strong>award decision & reason</strong> — that's your audit trail and your "Sourcing savings" KPI</li></ul></div>
+  </div>
+</section>
+
+<!-- 8 -->
+<section class="slide">
+  <div class="eyebrow">Step 05 · <span class="stamp">PO</span></div>
+  <h2>Purchase Order — the legal commitment</h2>
+  <p class="lead">The PO is the first document a <strong>vendor</strong> sees. Once the vendor accepts it, it's a contract. Everything downstream — receipt, invoice, payment — is checked <em>against the PO</em>.</p>
+  <div class="cols c2">
+    <div class="card"><h3>PO anatomy</h3>
+      <ul>
+        <li><strong>Header</strong>: PO number, date, vendor, bill-to & ship-to entity, currency, payment terms (e.g. Net 30), incoterms if imported</li>
+        <li><strong>Lines</strong>: item, HSN/SAC code, qty, unit price, tax rate (GST), discounts, delivery date</li>
+        <li><strong>Totals</strong>: subtotal, CGST/SGST/IGST, freight, grand total</li>
+        <li><strong>Terms & conditions</strong> attachment</li>
+      </ul>
+    </div>
+    <div class="card"><h3>Lifecycle & rules</h3>
+      <ul>
+        <li>Draft → Approved → Sent → Acknowledged → Partially received → Closed / Cancelled</li>
+        <li><strong>Amendments</strong> create a new version — never silently edit an issued PO</li>
+        <li>Open PO qty = ordered − received; this drives 3-way matching</li>
+        <li>An approved PO converts the PR's budget <em>commitment</em> into a firmer obligation</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 9 -->
+<section class="slide">
+  <div class="eyebrow">Step 06 · <span class="stamp">GRN</span></div>
+  <h2>Goods Receipt — proof it arrived</h2>
+  <div class="cols c2">
+    <div class="card"><h3>GRN (goods)</h3>
+      <ul>
+        <li>Created by stores against a PO when material arrives</li>
+        <li>Records <strong>received qty</strong>, <strong>accepted qty</strong>, <strong>rejected qty</strong> per line</li>
+        <li>Quality check may sit between receipt and acceptance</li>
+        <li>Partial deliveries → multiple GRNs against one PO</li>
+      </ul>
+    </div>
+    <div class="card"><h3>Service Entry Sheet (services)</h3>
+      <ul>
+        <li>For services there is no physical goods receipt</li>
+        <li>The project owner confirms "work done" — e.g. 40 hours of consulting delivered, milestone 2 completed</li>
+        <li>This confirmation plays the same role as a GRN in matching</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout warn"><p><strong>Why receipts matter:</strong> without a GRN, you'd be paying based only on what the vendor <em>claims</em> they delivered. The GRN is the company's independent evidence — the third leg of the 3-way match.</p></div>
+</section>
+
+<!-- 10 -->
+<section class="slide">
+  <div class="eyebrow">Step 07 · <span class="stamp">INV</span></div>
+  <h2>The vendor invoice (India specifics)</h2>
+  <div class="cols c2">
+    <div class="card"><h3>Must contain (GST-valid invoice)</h3>
+      <ul>
+        <li>Invoice number & date, vendor GSTIN, buyer GSTIN</li>
+        <li>Line items with HSN/SAC, qty, rate, taxable value</li>
+        <li>CGST + SGST (intra-state) or IGST (inter-state)</li>
+        <li>For vendors above the e-invoicing turnover threshold: <strong>IRN + QR code</strong> from the government portal</li>
+      </ul>
+    </div>
+    <div class="card"><h3>Realities your app must handle</h3>
+      <ul>
+        <li>Arrives as <strong>PDF over email</strong> (sometimes scanned images) — this is what your AI extraction module digitises</li>
+        <li>May not reference your PO number, or reference it wrongly</li>
+        <li>Credit notes / debit notes adjust earlier invoices</li>
+        <li><strong>Non-PO invoices</strong> exist (utilities, rent) — they follow a coding + approval route instead of matching</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout"><p><strong>TDS:</strong> for many service payments the buyer must deduct tax at source (e.g. 2% or 10% under various sections) and pay the vendor the net amount. Your payment module needs a TDS field per vendor/nature of service.</p></div>
+</section>
+
+<!-- 11 -->
+<section class="slide">
+  <div class="eyebrow">Step 08 · the heart of AP</div>
+  <h2>2-way vs 3-way matching</h2>
+  <table>
+    <tr><th>Match type</th><th>Documents compared</th><th>Checks</th><th>Used for</th></tr>
+    <tr><td>2-way</td><td>Invoice ↔ PO</td><td>Price, qty billed ≤ qty ordered, totals, tax</td><td>Services, subscriptions, low-risk categories</td></tr>
+    <tr><td>3-way</td><td>Invoice ↔ PO ↔ GRN</td><td>All of 2-way + qty billed ≤ qty <strong>received & accepted</strong></td><td>Physical goods — the default for material purchases</td></tr>
+    <tr><td>4-way</td><td>+ Quality inspection</td><td>Qty billed ≤ qty that passed QC</td><td>Regulated / high-value manufacturing</td></tr>
+  </table>
+  <div class="cols c2">
+    <div class="card"><h3>Worked example</h3><p>PO: 100 units @ ₹50. GRN: 90 received, 88 accepted. Invoice: 90 units @ ₹52.<br><br>→ <strong>Qty exception</strong> (billed 90 &gt; accepted 88) and <strong>price exception</strong> (₹52 &gt; ₹50). Both go to the exception queue with the buyer copied.</p></div>
+    <div class="card"><h3>Tolerances</h3><p>Real systems allow small deviations to avoid blocking everything: e.g. price within ±2% or ₹100, qty within ±1%. Within tolerance → auto-pass (counts toward the <strong>touchless rate</strong>). Outside → human review. Tolerances are configurable per category.</p></div>
+  </div>
+</section>
+
+<!-- 12 -->
+<section class="slide">
+  <div class="eyebrow">Step 09 · <span class="stamp teal">PAID</span></div>
+  <h2>Payments</h2>
+  <div class="cols c2">
+    <div class="card"><h3>Concepts</h3>
+      <ul>
+        <li><strong>Payment terms</strong>: Net 30/45/60, or "2/10 Net 30" (2% discount if paid in 10 days)</li>
+        <li><strong>Due date</strong> = invoice date (or receipt date, per policy) + terms</li>
+        <li><strong>Payment run</strong>: batch of approved invoices due, exported to the bank (or paid via ERP)</li>
+        <li><strong>Advance payments</strong>: paid before delivery, adjusted against future invoices — see "Advances" in the reference app's sidebar</li>
+      </ul>
+    </div>
+    <div class="card"><h3>India-specific</h3>
+      <ul>
+        <li><strong>TDS</strong> deducted at payment/credit, deposited monthly, Form 26Q filed quarterly</li>
+        <li><strong>MSMED Act</strong>: registered micro & small enterprises must be paid within <strong>45 days</strong> (or the agreed period if shorter) — else interest is payable and the expense can be disallowed for tax</li>
+        <li>That's exactly what the dashboard's <strong>"MSME at risk"</strong> card counts: payments nearing the 45-day limit</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 13 -->
+<section class="slide">
+  <div class="eyebrow">Money guardrails</div>
+  <h2>Budgets & commitment accounting</h2>
+  <p class="lead">A budget is an annual/quarterly spending limit per department + category. The clever part is tracking money in <strong>three states</strong>, not one:</p>
+  <div class="cols c3">
+    <div class="card"><h3><span class="tag">COMMITTED</span></h3><p>Approved PRs and open POs. Money you've promised but not yet been billed for.</p></div>
+    <div class="card"><h3><span class="tag">ACCRUED</span></h3><p>Goods received / invoices approved, not yet paid. A real liability.</p></div>
+    <div class="card"><h3><span class="tag">SPENT</span></h3><p>Payments actually made.</p></div>
+  </div>
+  <div class="callout"><p><strong>Budget check at PR approval</strong>: available = budget − committed − accrued − spent. If a new PR exceeds available budget, warn or block. The dashboard's "Budget utilization: committed vs allocated" card is this calculation.</p></div>
+</section>
+
+<!-- 14 -->
+<section class="slide">
+  <div class="eyebrow">Master data</div>
+  <h2>Vendor master — the foundation everything rests on</h2>
+  <div class="cols c2">
+    <div class="card"><h3>Vendor record fields</h3>
+      <ul>
+        <li>Legal name, PAN, <strong>GSTIN</strong> (validate format & status), MSME/Udyam registration number & category</li>
+        <li>Bank account + IFSC (verify via penny-drop before first payment)</li>
+        <li>Payment terms, TDS section & rate, currency</li>
+        <li>Categories supplied, contacts, addresses</li>
+        <li>Status: Draft → Under review → Active → Blocked</li>
+      </ul>
+    </div>
+    <div class="card"><h3>Why it's critical</h3>
+      <ul>
+        <li><strong>Fraud vector #1</strong> is changing a vendor's bank account — bank-detail changes need maker-checker approval and an audit log entry</li>
+        <li>Wrong GSTIN → lost input tax credit</li>
+        <li>Missing MSME flag → statutory 45-day breach without anyone noticing</li>
+        <li>Duplicate vendors → duplicate payments</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 15 -->
+<section class="slide">
+  <div class="eyebrow">Measuring the machine</div>
+  <h2>The KPIs on your reference dashboard, decoded</h2>
+  <table>
+    <tr><th>KPI card</th><th>Definition</th><th>What "good" looks like</th></tr>
+    <tr><td>Touchless rate</td><td>% of invoices processed with zero manual intervention (extracted, matched, approved automatically)</td><td>60–85% in mature setups</td></tr>
+    <tr><td>Pending approvals</td><td>Count of documents sitting in someone's approval queue</td><td>Low, with SLA-based escalation</td></tr>
+    <tr><td>Avg cycle time (AP)</td><td>Median days from invoice receipt → payment</td><td>Under the payment terms; trending down</td></tr>
+    <tr><td>PR cycle time</td><td>Median days from requisition → approval decision</td><td>&lt; 2 days</td></tr>
+    <tr><td>Monthly throughput</td><td>Total ₹ value of invoices processed this month</td><td>Tracks business volume</td></tr>
+    <tr><td>MSME at risk</td><td>Payments approaching the 45-day MSMED limit</td><td>Zero</td></tr>
+    <tr><td>Budget utilization</td><td>(Committed + spent) ÷ allocated, across budgets</td><td>Tracking plan, no overruns</td></tr>
+    <tr><td>Sourcing savings</td><td>(PR estimate − awarded RFQ value) ÷ PR estimate</td><td>3–10%</td></tr>
+  </table>
+</section>
+
+<!-- 16 -->
+<section class="slide">
+  <div class="eyebrow">Vocabulary</div>
+  <h2>Glossary — speak the language</h2>
+  <div class="cols c2">
+    <div class="card"><ul>
+      <li><strong>PR</strong> — Purchase Requisition (internal ask)</li>
+      <li><strong>RFQ/RFP/RFI</strong> — sourcing requests to vendors</li>
+      <li><strong>PO</strong> — Purchase Order (external commitment)</li>
+      <li><strong>GRN</strong> — Goods Receipt Note</li>
+      <li><strong>SES</strong> — Service Entry Sheet</li>
+      <li><strong>AP</strong> — Accounts Payable</li>
+      <li><strong>SoD</strong> — Segregation of Duties</li>
+      <li><strong>DOA</strong> — Delegation of Authority</li>
+    </ul></div>
+    <div class="card"><ul>
+      <li><strong>HSN/SAC</strong> — goods/services tax classification codes</li>
+      <li><strong>GSTIN / IRN</strong> — GST identity / e-invoice reference number</li>
+      <li><strong>TDS</strong> — Tax Deducted at Source</li>
+      <li><strong>MSME / Udyam</strong> — registered micro, small & medium enterprises</li>
+      <li><strong>Landed cost</strong> — full cost incl. tax, freight, duties</li>
+      <li><strong>Touchless / straight-through</strong> — zero-touch invoice processing</li>
+      <li><strong>Maker-checker</strong> — one person enters, another approves</li>
+    </ul></div>
+  </div>
+</section>
+
+<!-- 17 -->
+<section class="slide">
+  <div class="eyebrow">Prove it to yourself</div>
+  <h2>Self-check before Module 2</h2>
+  <div class="cols c2">
+    <div class="card"><h3>Answer without looking back</h3>
+      <ol>
+        <li>Why can't the requester approve their own PR?</li>
+        <li>What are the three documents in a 3-way match, and what does each prove?</li>
+        <li>PO says 50 units @ ₹200; GRN accepted 48; invoice bills 50 @ ₹200. What happens?</li>
+        <li>Why does the "MSME at risk" card exist? What law drives it?</li>
+        <li>What's the difference between committed, accrued, and spent budget?</li>
+      </ol>
+    </div>
+    <div class="card"><h3>Field exercise</h3>
+      <p>Ask your finance/purchasing colleagues for one real (anonymised) example each of: a PR, a PO PDF, a GRN, and a vendor invoice. Lay them side by side and trace the numbers across documents by hand. <strong>Do the match yourself once on paper</strong> — you'll design a far better matching engine after.</p>
+      <p style="margin-top:12px">Then proceed to <strong>Module 2 — Building the app</strong>.</p>
+    </div>
+  </div>
+</section>
+
+</div>
+<div class="nav">
+  <span class="counter" id="counter"></span>
+  <button id="prev" aria-label="Previous slide">←</button>
+  <button id="next" aria-label="Next slide">→</button>
+</div>
+<script>
+const slides=[...document.querySelectorAll('.slide')];let i=0;
+function show(n){i=Math.max(0,Math.min(slides.length-1,n));slides.forEach((s,k)=>s.classList.toggle('active',k===i));
+document.getElementById('bar').style.width=((i+1)/slides.length*100)+'%';
+document.getElementById('counter').textContent=(i+1)+' / '+slides.length;location.hash=i+1;}
+document.getElementById('next').onclick=()=>show(i+1);
+document.getElementById('prev').onclick=()=>show(i-1);
+addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' ')show(i+1);if(e.key==='ArrowLeft')show(i-1);});
+show(parseInt(location.hash.slice(1))-1||0);
+</script>
+</body>
+</html>

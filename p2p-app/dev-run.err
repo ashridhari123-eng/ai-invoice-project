@@ -1,0 +1,689 @@
+[browser] A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <ErrorBoundary errorComponent={undefined} errorStyles={undefined} errorScripts={undefined}>
+      <LoadingBoundary name="login/" loading={null}>
+        <HTTPAccessFallbackBoundary notFound={undefined} forbidden={undefined} unauthorized={undefined}>
+          <RedirectBoundary>
+            <RedirectErrorBoundary router={{...}}>
+              <InnerLayoutRouter url="/login" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+                <SegmentViewNode type="page" pagePath="login/page...">
+                  <SegmentTrieNode>
+                  <LoginPage>
+                    <div className="flex min-h...">
+                      <div>
+                      <div className="flex w-ful...">
+                        <div className="mx-auto w-...">
+                          <div>
+                          <h1>
+                          <p>
+                          <LoginForm>
+                            <form onSubmit={function handleSubmit} className="space-y-4">
+                              <Field label="Work email">
+                                <label className="block">
+                                  <span>
+                                  <Input type="email" required={true} autoComplete="email" placeholder="you@compan..." ...>
+                                    <input
+                                      className="w-full rounded-md border border-line bg-white px-3 py-2 text-sm text-..."
+                                      type="email"
+                                      required={true}
+                                      autoComplete="email"
+                                      placeholder="you@company.in"
+                                      value=""
+                                      onChange={function onChange}
+-                                     fdprocessedid="h6tzj"
+                                    >
+                              <Field label="Password">
+                                <label className="block">
+                                  <span>
+                                  <Input type="password" required={true} autoComplete="current-pa..." ...>
+                                    <input
+                                      className="w-full rounded-md border border-line bg-white px-3 py-2 text-sm text-..."
+                                      type="password"
+                                      required={true}
+                                      autoComplete="current-password"
+                                      placeholder="••••••••"
+                                      value=""
+                                      onChange={function onChange}
+-                                     fdprocessedid="juksd"
+                                    >
+                              <Button type="submit" disabled={false} className="w-full">
+                                <button
+                                  className="inline-flex items-center justify-center gap-1.5 rounded-md px-3.5 py-2 te..."
+                                  type="submit"
+                                  disabled={false}
+-                                 fdprocessedid="x2c4hn"
+                                >
++                                 Sign in
+                          <DemoLoginButtons>
+                            <div className="mt-8 round...">
+                              <p>
+                              <p>
+                              <ul className="mt-3 space...">
+                                <li>
+                                  <button
+                                    type="button"
+                                    onClick={function onClick}
+                                    disabled={false}
+                                    className="flex w-full items-center justify-between gap-3 rounded-md border border..."
+-                                   fdprocessedid="44hulr"
+                                  >
+                                <li>
+                                  <button
+                                    type="button"
+                                    onClick={function onClick}
+                                    disabled={false}
+                                    className="flex w-full items-center justify-between gap-3 rounded-md border border..."
+-                                   fdprocessedid="lgu8vc"
+                                  >
+                                <li>
+                                  <button
+                                    type="button"
+                                    onClick={function onClick}
+                                    disabled={false}
+                                    className="flex w-full items-center justify-between gap-3 rounded-md border border..."
+-                                   fdprocessedid="gn6qfj"
+                                  >
+                                <li>
+                                  <button
+                                    type="button"
+                                    onClick={function onClick}
+                                    disabled={false}
+                                    className="flex w-full items-center justify-between gap-3 rounded-md border border..."
+-                                   fdprocessedid="tdiydd"
+                                  >
+                                <li>
+                                  <button
+                                    type="button"
+                                    onClick={function onClick}
+                                    disabled={false}
+                                    className="flex w-full items-center justify-between gap-3 rounded-md border border..."
+-                                   fdprocessedid="yt0waq"
+                                  >
+                ...
+              ...
+ 
+    at <unknown> (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:3439:25)
+    at runWithFiberInDEV (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:965:74)
+    at emitPendingHydrationWarnings (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:3438:13)
+    at completeWork (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:6885:102)
+    at runWithFiberInDEV (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:965:131)
+    at completeUnitOfWork (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:9622:23)
+    at performUnitOfWork (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:9557:28)
+    at workLoopConcurrentByScheduler (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:9551:58)
+    at renderRootConcurrent (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:9534:71)
+    at performWorkOnRoot (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:9061:150)
+    at performWorkOnRootViaSchedulerTask (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_1399flz._.js:2647:64) (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:3439:25)
+[browser] A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <LoadingBoundary name="/" loading={null}>
+      <HTTPAccessFallbackBoundary notFound={{...}} forbidden={undefined} unauthorized={undefined}>
+        <HTTPAccessFallbackErrorBoundary pathname="/requisiti..." notFound={{...}} forbidden={undefined} ...>
+          <RedirectBoundary>
+            <RedirectErrorBoundary router={{...}}>
+              <InnerLayoutRouter url="/requisiti..." tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} ...>
+                <SegmentViewNode type="layout" pagePath="(app)/layo...">
+                  <SegmentTrieNode>
+                  <script>
+                  <script>
+                  <AppLayout>
+                    <AppShell user={{name:"Rame...", ...}}>
+                      <div className="min-h-full">
+                        <aside>
+                        <div className="ml-60 flex...">
+                          <header className="sticky top...">
+                            <div>
+                            <div className="flex items...">
+                              <NotificationBell>
+                                <div className="relative">
+                                  <button
+                                    onClick={function handleOpen}
+                                    className="relative grid h-9 w-9 place-items-center rounded-md border border-line ..."
+                                    aria-label="Notifications"
+-                                   fdprocessedid="i1chk"
+                                  >
+                              <div>
+                              <button
+                                onClick={function handleLogout}
+                                className="rounded-md border border-line bg-white px-3 py-1.5 text-xs font-medium text..."
+-                               fdprocessedid="2j8xo"
+                              >
++                               Sign out
+                          ...
+                            <div className="p-5">
+                              <div className="grid grid-...">
+                                <Field label="Department">
+                                  <label className="block">
+                                    <span>
+                                    <Select value="Operations" onChange={function onChange}>
+                                      <select
+                                        className="w-full rounded-md border border-line bg-white px-3 py-2 text-sm tex..."
+                                        value="Operations"
+                                        onChange={function onChange}
+-                                       fdprocessedid="4yl1li"
+                                      >
+                                <Field label="Budget line" hint="Optional, ...">
+                                  <label className="block">
+                                    <span>
+                                    <Select value="" onChange={function onChange}>
+                                      <select
+                                        className="w-full rounded-md border border-line bg-white px-3 py-2 text-sm tex..."
+                                        value=""
+                                        onChange={function onChange}
+-                                       fdprocessedid="9w7pwh"
+                                      >
+                                    ...
+                                ...
+                              <div className="mt-5">
+                                <h3>
+                                ...
+                                  <tr>
+                                    <td className="border-b b...">
+                                      <Select value="" onChange={function onChange} className="min-w-[220px]">
+                                        <select
+                                          className="min-w-[220px]"
+                                          value=""
+                                          onChange={function onChange}
+-                                         fdprocessedid="qujp1o"
+                                        >
+                                    <td className="border-b b...">
+                                      <Input type="number" min="0" step="any" placeholder="0" value="" ...>
+                                        <input
+                                          className="w-20"
+                                          type="number"
+                                          min="0"
+                                          step="any"
+                                          placeholder="0"
+                                          value=""
+                                          onChange={function onChange}
+-                                         fdprocessedid="tpqmep"
+                                        >
+                                    <td className="border-b b...">
+                                      <Input type="number" min="0" step="any" placeholder="0.00" value="" ...>
+                                        <input
+                                          className="w-28"
+                                          type="number"
+                                          min="0"
+                                          step="any"
+                                          placeholder="0.00"
+                                          value=""
+                                          onChange={function onChange}
+-                                         fdprocessedid="kpu7x"
+                                        >
+                                    <td className="border-b b...">
+                                      <Select value="18" onChange={function onChange} className="w-20">
+                                        <select
+                                          className="w-20"
+                                          value="18"
+                                          onChange={function onChange}
+-                                         fdprocessedid="d9zcjj"
+                                        >
+                                    ...
+                                <div className="mt-2">
+                                  <Button type="button" variant="outline" onClick={function addLine}>
+                                    <button
+                                      className="inline-flex items-center justify-center gap-1.5 rounded-md px-3.5 py-..."
+                                      type="button"
+                                      onClick={function addLine}
+-                                     fdprocessedid="v0wmxc"
+                                    >
++                                     + Add line
+                                <div>
+                                <div className="mt-4">
+                                  <Field label="Notes">
+                                    <label className="block">
+                                      <span>
+                                      <Input value="" onChange={function onChange} placeholder="Justificat...">
+                                        <input
+                                          className="w-full rounded-md border border-line bg-white px-3 py-2 text-sm t..."
+                                          value=""
+                                          onChange={function onChange}
+                                          placeholder="Justification, delivery location, brand preference…"
+-                                         fdprocessedid="o6lz7w"
+                                        >
+                                <div className="mt-5 flex ...">
+                                  <Button type="button" disabled={false} onClick={function onClick}>
+                                    <button
+                                      className="inline-flex items-center justify-center gap-1.5 rounded-md px-3.5 py-..."
+                                      type="button"
+                                      disabled={false}
+                                      onClick={function onClick}
+-                                     fdprocessedid="rf3znq"
+                                    >
++                                     Save draft
+                                  <Button type="button" variant="ghost" disabled={false} onClick={function onClick}>
+                                    <button
+                                      className="inline-flex items-center justify-center gap-1.5 rounded-md px-3.5 py-..."
+                                      type="button"
+                                      disabled={false}
+                                      onClick={function onClick}
+-                                     fdprocessedid="d1mbzs"
+                                    >
++                                     {"Save & submit for approval"}
+                                  <Button type="button" variant="outline" onClick={function onClick}>
+                                    <button
+                                      className="inline-flex items-center justify-center gap-1.5 rounded-md px-3.5 py-..."
+                                      type="button"
+                                      onClick={function onClick}
+-                                     fdprocessedid="io80wh"
+                                    >
++                                     Cancel
+              ...
+ 
+    at <unknown> (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:3439:25)
+    at runWithFiberInDEV (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:965:74)
+    at emitPendingHydrationWarnings (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:3438:13)
+    at completeWork (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:6885:102)
+    at runWithFiberInDEV (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:965:131)
+    at completeUnitOfWork (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:9622:23)
+    at performUnitOfWork (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:9557:28)
+    at workLoopConcurrentByScheduler (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:9551:58)
+    at renderRootConcurrent (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:9534:71)
+    at performWorkOnRoot (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:9061:150)
+    at performWorkOnRootViaSchedulerTask (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_1399flz._.js:2647:64) (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:3439:25)
+[browser] A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <ErrorBoundary errorComponent={undefined} errorStyles={undefined} errorScripts={undefined}>
+      <LoadingBoundary name="login/" loading={null}>
+        <HTTPAccessFallbackBoundary notFound={undefined} forbidden={undefined} unauthorized={undefined}>
+          <RedirectBoundary>
+            <RedirectErrorBoundary router={{...}}>
+              <InnerLayoutRouter url="/login" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+                <SegmentViewNode type="page" pagePath="login/page...">
+                  <SegmentTrieNode>
+                  <LoginPage>
+                    <div className="flex min-h...">
+                      <div>
+                      <div className="flex w-ful...">
+                        <div className="mx-auto w-...">
+                          <div>
+                          <h1>
+                          <p>
+                          <LoginForm>
+                            <form onSubmit={function handleSubmit} className="space-y-4">
+                              <Field label="Work email">
+                                <label className="block">
+                                  <span>
+                                  <Input type="email" required={true} autoComplete="email" placeholder="you@compan..." ...>
+                                    <input
+                                      className="w-full rounded-md border border-line bg-white px-3 py-2 text-sm text-..."
+                                      type="email"
+                                      required={true}
+                                      autoComplete="email"
+                                      placeholder="you@company.in"
+                                      value=""
+                                      onChange={function onChange}
+-                                     fdprocessedid="zr4bca"
+                                    >
+                              <Field label="Password">
+                                <label className="block">
+                                  <span>
+                                  <Input type="password" required={true} autoComplete="current-pa..." ...>
+                                    <input
+                                      className="w-full rounded-md border border-line bg-white px-3 py-2 text-sm text-..."
+                                      type="password"
+                                      required={true}
+                                      autoComplete="current-password"
+                                      placeholder="••••••••"
+                                      value=""
+                                      onChange={function onChange}
+-                                     fdprocessedid="z0dujo"
+                                    >
+                              <Button type="submit" disabled={false} className="w-full">
+                                <button
+                                  className="inline-flex items-center justify-center gap-1.5 rounded-md px-3.5 py-2 te..."
+                                  type="submit"
+                                  disabled={false}
+-                                 fdprocessedid="atrd7d"
+                                >
++                                 Sign in
+                          <DemoLoginButtons>
+                            <div className="mt-8 round...">
+                              <p>
+                              <p>
+                              <ul className="mt-3 space...">
+                                <li>
+                                  <button
+                                    type="button"
+                                    onClick={function onClick}
+                                    disabled={false}
+                                    className="flex w-full items-center justify-between gap-3 rounded-md border border..."
+-                                   fdprocessedid="sip3v6"
+                                  >
+                                <li>
+                                  <button
+                                    type="button"
+                                    onClick={function onClick}
+                                    disabled={false}
+                                    className="flex w-full items-center justify-between gap-3 rounded-md border border..."
+-                                   fdprocessedid="otlmpf"
+                                  >
+                                <li>
+                                  <button
+                                    type="button"
+                                    onClick={function onClick}
+                                    disabled={false}
+                                    className="flex w-full items-center justify-between gap-3 rounded-md border border..."
+-                                   fdprocessedid="2ckhrk"
+                                  >
+                                <li>
+                                  <button
+                                    type="button"
+                                    onClick={function onClick}
+                                    disabled={false}
+                                    className="flex w-full items-center justify-between gap-3 rounded-md border border..."
+-                                   fdprocessedid="31zkrn"
+                                  >
+                                <li>
+                                  <button
+                                    type="button"
+                                    onClick={function onClick}
+                                    disabled={false}
+                                    className="flex w-full items-center justify-between gap-3 rounded-md border border..."
+-                                   fdprocessedid="emr2zo"
+                                  >
+                ...
+              ...
+ 
+    at <unknown> (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:3439:25)
+    at runWithFiberInDEV (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:965:74)
+    at emitPendingHydrationWarnings (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:3438:13)
+    at completeWork (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:6885:102)
+    at runWithFiberInDEV (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:965:131)
+    at completeUnitOfWork (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:9622:23)
+    at performUnitOfWork (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:9557:28)
+    at workLoopSync (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:9449:40)
+    at renderRootSync (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:9433:13)
+    at performWorkOnRoot (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:9061:186)
+    at performSyncWorkOnRoot (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:10263:9)
+    at flushSyncWorkAcrossRoots_impl (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:10179:316)
+    at dispatchEvent (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:13021:174)
+    at dispatchDiscreteEvent (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:12984:64) (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:3439:25)
+[browser] A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <ErrorBoundary errorComponent={undefined} errorStyles={undefined} errorScripts={undefined}>
+      <LoadingBoundary name="login/" loading={null}>
+        <HTTPAccessFallbackBoundary notFound={undefined} forbidden={undefined} unauthorized={undefined}>
+          <RedirectBoundary>
+            <RedirectErrorBoundary router={{...}}>
+              <InnerLayoutRouter url="/login" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+                <SegmentViewNode type="page" pagePath="login/page...">
+                  <SegmentTrieNode>
+                  <LoginPage>
+                    <div className="flex min-h...">
+                      <div>
+                      <div className="flex w-ful...">
+                        <div className="mx-auto w-...">
+                          <div>
+                          <h1>
+                          <p>
+                          <LoginForm>
+                            <form onSubmit={function handleSubmit} className="space-y-4">
+                              <Field label="Work email">
+                                <label className="block">
+                                  <span>
+                                  <Input type="email" required={true} autoComplete="email" placeholder="you@compan..." ...>
+                                    <input
+                                      className="w-full rounded-md border border-line bg-white px-3 py-2 text-sm text-..."
+                                      type="email"
+                                      required={true}
+                                      autoComplete="email"
+                                      placeholder="you@company.in"
+                                      value=""
+                                      onChange={function onChange}
+-                                     fdprocessedid="statmv"
+                                    >
+                              <Field label="Password">
+                                <label className="block">
+                                  <span>
+                                  <Input type="password" required={true} autoComplete="current-pa..." ...>
+                                    <input
+                                      className="w-full rounded-md border border-line bg-white px-3 py-2 text-sm text-..."
+                                      type="password"
+                                      required={true}
+                                      autoComplete="current-password"
+                                      placeholder="••••••••"
+                                      value=""
+                                      onChange={function onChange}
+-                                     fdprocessedid="wvd4r"
+                                    >
+                              <Button type="submit" disabled={false} className="w-full">
+                                <button
+                                  className="inline-flex items-center justify-center gap-1.5 rounded-md px-3.5 py-2 te..."
+                                  type="submit"
+                                  disabled={false}
+-                                 fdprocessedid="kiazt"
+                                >
++                                 Sign in
+                          <DemoLoginButtons>
+                            <div className="mt-8 round...">
+                              <p>
+                              <p>
+                              <ul className="mt-3 space...">
+                                <li>
+                                  <button
+                                    type="button"
+                                    onClick={function onClick}
+                                    disabled={false}
+                                    className="flex w-full items-center justify-between gap-3 rounded-md border border..."
+-                                   fdprocessedid="8lpnxb"
+                                  >
+                                <li>
+                                  <button
+                                    type="button"
+                                    onClick={function onClick}
+                                    disabled={false}
+                                    className="flex w-full items-center justify-between gap-3 rounded-md border border..."
+-                                   fdprocessedid="bb0i3n"
+                                  >
+                                <li>
+                                  <button
+                                    type="button"
+                                    onClick={function onClick}
+                                    disabled={false}
+                                    className="flex w-full items-center justify-between gap-3 rounded-md border border..."
+-                                   fdprocessedid="kmpm2b"
+                                  >
+                                <li>
+                                  <button
+                                    type="button"
+                                    onClick={function onClick}
+                                    disabled={false}
+                                    className="flex w-full items-center justify-between gap-3 rounded-md border border..."
+-                                   fdprocessedid="bvetc"
+                                  >
+                                <li>
+                                  <button
+                                    type="button"
+                                    onClick={function onClick}
+                                    disabled={false}
+                                    className="flex w-full items-center justify-between gap-3 rounded-md border border..."
+-                                   fdprocessedid="84a4zr"
+                                  >
+                ...
+              ...
+ 
+    at <unknown> (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:3439:25)
+    at runWithFiberInDEV (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:965:74)
+    at emitPendingHydrationWarnings (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:3438:13)
+    at completeWork (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:6885:102)
+    at runWithFiberInDEV (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:965:131)
+    at completeUnitOfWork (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:9622:23)
+    at performUnitOfWork (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:9557:28)
+    at workLoopConcurrentByScheduler (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:9551:58)
+    at renderRootConcurrent (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:9534:71)
+    at performWorkOnRoot (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:9061:150)
+    at performWorkOnRootViaSchedulerTask (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_1399flz._.js:2647:64) (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:3439:25)
+[browser] A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <ErrorBoundary errorComponent={undefined} errorStyles={undefined} errorScripts={undefined}>
+      <LoadingBoundary name="login/" loading={null}>
+        <HTTPAccessFallbackBoundary notFound={undefined} forbidden={undefined} unauthorized={undefined}>
+          <RedirectBoundary>
+            <RedirectErrorBoundary router={{...}}>
+              <InnerLayoutRouter url="/login" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
+                <SegmentViewNode type="page" pagePath="login/page...">
+                  <SegmentTrieNode>
+                  <LoginPage>
+                    <div className="flex min-h...">
+                      <div>
+                      <div className="flex w-ful...">
+                        <div className="mx-auto w-...">
+                          <div>
+                          <h1>
+                          <p>
+                          <LoginForm>
+                            <form onSubmit={function handleSubmit} className="space-y-4">
+                              <Field label="Work email">
+                                <label className="block">
+                                  <span>
+                                  <Input type="email" required={true} autoComplete="email" placeholder="you@compan..." ...>
+                                    <input
+                                      className="w-full rounded-md border border-line bg-white px-3 py-2 text-sm text-..."
+                                      type="email"
+                                      required={true}
+                                      autoComplete="email"
+                                      placeholder="you@company.in"
+                                      value=""
+                                      onChange={function onChange}
+-                                     fdprocessedid="uxsmv2"
+                                    >
+                              <Field label="Password">
+                                <label className="block">
+                                  <span>
+                                  <Input type="password" required={true} autoComplete="current-pa..." ...>
+                                    <input
+                                      className="w-full rounded-md border border-line bg-white px-3 py-2 text-sm text-..."
+                                      type="password"
+                                      required={true}
+                                      autoComplete="current-password"
+                                      placeholder="••••••••"
+                                      value=""
+                                      onChange={function onChange}
+-                                     fdprocessedid="tbxsa"
+                                    >
+                              <Button type="submit" disabled={false} className="w-full">
+                                <button
+                                  className="inline-flex items-center justify-center gap-1.5 rounded-md px-3.5 py-2 te..."
+                                  type="submit"
+                                  disabled={false}
+-                                 fdprocessedid="1eazgh"
+                                >
++                                 Sign in
+                          <DemoLoginButtons>
+                            <div className="mt-8 round...">
+                              <p>
+                              <p>
+                              <ul className="mt-3 space...">
+                                <li>
+                                  <button
+                                    type="button"
+                                    onClick={function onClick}
+                                    disabled={false}
+                                    className="flex w-full items-center justify-between gap-3 rounded-md border border..."
+-                                   fdprocessedid="z4mvio"
+                                  >
+                                <li>
+                                  <button
+                                    type="button"
+                                    onClick={function onClick}
+                                    disabled={false}
+                                    className="flex w-full items-center justify-between gap-3 rounded-md border border..."
+-                                   fdprocessedid="4b7ljp"
+                                  >
+                                <li>
+                                  <button
+                                    type="button"
+                                    onClick={function onClick}
+                                    disabled={false}
+                                    className="flex w-full items-center justify-between gap-3 rounded-md border border..."
+-                                   fdprocessedid="nos6b8"
+                                  >
+                                <li>
+                                  <button
+                                    type="button"
+                                    onClick={function onClick}
+                                    disabled={false}
+                                    className="flex w-full items-center justify-between gap-3 rounded-md border border..."
+-                                   fdprocessedid="cn9ee"
+                                  >
+                                <li>
+                                  <button
+                                    type="button"
+                                    onClick={function onClick}
+                                    disabled={false}
+                                    className="flex w-full items-center justify-between gap-3 rounded-md border border..."
+-                                   fdprocessedid="y8w1ng"
+                                  >
+                ...
+              ...
+ 
+    at <unknown> (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:3439:25)
+    at runWithFiberInDEV (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:965:74)
+    at emitPendingHydrationWarnings (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:3438:13)
+    at completeWork (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:6885:102)
+    at runWithFiberInDEV (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:965:131)
+    at completeUnitOfWork (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:9622:23)
+    at performUnitOfWork (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:9557:28)
+    at workLoopConcurrentByScheduler (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:9551:58)
+    at renderRootConcurrent (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:9534:71)
+    at performWorkOnRoot (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:9061:150)
+    at performWorkOnRootViaSchedulerTask (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_1399flz._.js:2647:64) (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_compiled_react-dom_0dzqmnt._.js:3439:25)

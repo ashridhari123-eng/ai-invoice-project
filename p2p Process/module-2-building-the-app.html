@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 2 · Building the P2P App</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#16214E; --ink-soft:#3D4B7D; --paper:#F4F6FA; --card:#FFFFFF;
+  --pink:#E23D7B; --teal:#0E9384; --amber:#B45309; --line:#D7DDEB;
+  --mono:'IBM Plex Mono',monospace; --body:'IBM Plex Sans',sans-serif; --disp:'Archivo',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:var(--body);background:var(--paper);color:var(--ink);overflow:hidden}
+.progress{position:fixed;top:0;left:0;height:4px;background:var(--pink);width:0;z-index:50;transition:width .25s ease}
+.deck{position:relative;height:100vh;width:100vw}
+.slide{position:absolute;inset:0;padding:64px 84px 96px;display:none;flex-direction:column;overflow:auto}
+.slide.active{display:flex}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--pink);margin-bottom:14px;font-weight:600}
+h1{font-family:var(--disp);font-weight:900;font-size:clamp(40px,5.4vw,68px);line-height:1.02;letter-spacing:-.02em;margin-bottom:20px}
+h2{font-family:var(--disp);font-weight:800;font-size:clamp(28px,3.4vw,42px);line-height:1.05;letter-spacing:-.015em;margin-bottom:22px}
+h3{font-family:var(--disp);font-weight:700;font-size:18px;margin-bottom:8px}
+p.lead{font-size:19px;line-height:1.55;color:var(--ink-soft);max-width:62ch}
+p,li{font-size:15.5px;line-height:1.55;color:var(--ink-soft)}
+li{margin-bottom:8px}
+ul,ol{padding-left:20px;margin-top:6px}
+strong{color:var(--ink);font-weight:600}
+.cols{display:grid;gap:22px;margin-top:22px}
+.cols.c2{grid-template-columns:1fr 1fr}
+.cols.c3{grid-template-columns:1fr 1fr 1fr}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px 22px}
+.stamp{display:inline-block;font-family:var(--mono);font-weight:600;font-size:12px;letter-spacing:.12em;color:var(--pink);border:2px solid var(--pink);border-radius:6px;padding:3px 9px;transform:rotate(-3deg);background:rgba(226,61,123,.05)}
+.stamp.teal{color:var(--teal);border-color:var(--teal);background:rgba(14,147,132,.06)}
+table{border-collapse:collapse;width:100%;margin-top:18px;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:14.5px}
+th{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;text-align:left;padding:12px 16px;background:var(--ink);color:#fff;font-weight:600}
+td{padding:11px 16px;border-top:1px solid var(--line);color:var(--ink-soft);line-height:1.45;vertical-align:top}
+td:first-child{color:var(--ink);font-weight:600}
+code,.mono{font-family:var(--mono);font-size:.92em;background:rgba(22,33,78,.06);padding:1px 6px;border-radius:4px;color:var(--ink)}
+pre{font-family:var(--mono);font-size:13px;line-height:1.6;background:#101733;color:#DCE4FF;border-radius:10px;padding:18px 20px;overflow:auto;margin-top:14px}
+pre .c{color:#7D8BC4}
+.callout{border-left:4px solid var(--teal);background:rgba(14,147,132,.07);border-radius:0 10px 10px 0;padding:16px 20px;margin-top:20px}
+.callout.warn{border-color:var(--amber);background:rgba(180,83,9,.07)}
+.callout p{color:var(--ink)}
+.footer-note{margin-top:auto;padding-top:24px;font-family:var(--mono);font-size:12px;color:#8B94B8;letter-spacing:.05em}
+.nav{position:fixed;bottom:20px;right:24px;display:flex;gap:8px;align-items:center;z-index:60}
+.nav button{font-family:var(--mono);font-size:14px;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);border-radius:8px;padding:8px 14px;cursor:pointer}
+.nav button:hover{background:var(--ink);color:#fff}
+.nav button:focus-visible{outline:3px solid var(--pink);outline-offset:2px}
+.counter{font-family:var(--mono);font-size:12.5px;color:var(--ink-soft);margin-right:6px}
+.home{position:fixed;bottom:20px;left:24px;font-family:var(--mono);font-size:12.5px;color:var(--ink-soft);text-decoration:none;z-index:60;border-bottom:1px dashed var(--ink-soft)}
+.home:hover{color:var(--pink);border-color:var(--pink)}
+.tag{font-family:var(--mono);font-size:11.5px;font-weight:600;letter-spacing:.08em;padding:2px 8px;border-radius:99px;border:1px solid var(--line);color:var(--ink-soft)}
+.state{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px}
+.state span{font-family:var(--mono);font-size:12px;font-weight:600;padding:5px 10px;border:1.5px solid var(--line);border-radius:7px;background:var(--card);color:var(--ink-soft)}
+.state em{color:var(--line);font-style:normal;font-weight:700}
+@media (max-width:900px){.slide{padding:40px 26px 96px}.cols.c2,.cols.c3{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.progress{transition:none}}
+</style>
+</head>
+<body>
+<div class="progress" id="bar"></div>
+<a class="home" href="index.html">← learning path</a>
+<div class="deck" id="deck">
+
+<!-- 1 -->
+<section class="slide">
+  <div class="eyebrow">Module 2 of 4 · Self-study · ~3 hours</div>
+  <h1>Building the<br>P2P Application</h1>
+  <p class="lead">Now that you speak the domain language, let's turn the reference dashboard into an engineering plan: modules, data model, state machines, workflow engine, APIs, and a milestone roadmap you can execute solo.</p>
+  <div class="footer-note">Prerequisite: Module 1. Keep the reference screenshot open beside these slides.</div>
+</section>
+
+<!-- 2 -->
+<section class="slide">
+  <div class="eyebrow">Read the reference like a spec</div>
+  <h2>Decoding the dashboard screenshot</h2>
+  <p class="lead">The sidebar of the reference app is literally your module list. Every nav item = one feature area you will build.</p>
+  <table>
+    <tr><th>Sidebar group</th><th>Items</th><th>What it is</th></tr>
+    <tr><td>Overview</td><td>Dashboard</td><td>KPI cards, cycle-time trend, invoices-by-status donut, recent activity, "pay this week"</td></tr>
+    <tr><td>Procure</td><td>Budgets · Purchase Requests · RFQs · Purchase Orders</td><td>The upstream flow: money limits → internal request → sourcing → external commitment</td></tr>
+    <tr><td>Pay</td><td>Advances · Inbox · Invoices · Payments</td><td>The downstream flow: prepayments, invoice capture (email inbox!), matching, payment runs</td></tr>
+    <tr><td>Manage</td><td>Vendors · Reports · Audit Log</td><td>Master data, analytics, and the immutable trail of who did what</td></tr>
+  </table>
+  <div class="callout"><p>Also note in the top bar: <strong>entity switcher</strong> ("Meridian Trading FZE" — multi-company support), global search, date-range filter, export. These are cross-cutting features, not modules.</p></div>
+</section>
+
+<!-- 3 -->
+<section class="slide">
+  <div class="eyebrow">Architecture</div>
+  <h2>A stack a solo fresher can actually ship</h2>
+  <div class="cols c3">
+    <div class="card"><h3>Frontend</h3><ul><li><strong>React + TypeScript</strong> (Vite)</li><li>Component library: shadcn/ui or Ant Design (tables, forms, drawers come free)</li><li>Charts: Recharts</li><li>State/server-cache: TanStack Query</li></ul></div>
+    <div class="card"><h3>Backend</h3><ul><li><strong>Node.js (NestJS)</strong> or <strong>Python (FastAPI)</strong> — pick the language you're strongest in</li><li>REST API + JSON</li><li>Background jobs: BullMQ / Celery (email polling, matching, syncs)</li><li>Auth: JWT + role claims</li></ul></div>
+    <div class="card"><h3>Data & infra</h3><ul><li><strong>PostgreSQL</strong> — one database, relational, transactional</li><li>Object storage for PDFs (S3-compatible)</li><li>Redis for queues/cache</li><li>Docker Compose for local dev</li></ul></div>
+  </div>
+  <div class="callout warn"><p><strong>Advice:</strong> resist microservices. One well-structured monolith with clear modules is the right architecture for one developer. Split later only if forced to.</p></div>
+</section>
+
+<!-- 4 -->
+<section class="slide">
+  <div class="eyebrow">Data model</div>
+  <h2>Core entities and how they link</h2>
+  <pre>
+organizations ─┬─ users ── roles / approvals_delegations
+               ├─ budgets (dept + category + period, amount)
+               ├─ vendors ── vendor_bank_accounts (maker-checker!)
+               ├─ items (catalog, HSN/SAC, default tax)
+               │
+purchase_requisitions ── pr_lines ──────────────┐  (line-level links!)
+        │ approvals[]                           │
+rfqs ── rfq_lines ── rfq_vendors ── quotes ── quote_lines
+        │ award decision                        │
+purchase_orders ── po_lines ◄───────────────────┘
+        │ approvals[]
+goods_receipts ── grn_lines (received/accepted/rejected qty, po_line_id)
+invoices ── invoice_lines (po_line_id nullable) ── match_results
+payments ── payment_lines (invoice_id, tds_amount) ── advances (adjustments)
+audit_log (append-only: entity, action, actor, before/after, timestamp)</pre>
+  <div class="cols c2">
+    <div class="card"><h3>Two rules that save you later</h3><ul><li><strong>Link at line level</strong>, not just header level — matching, partial receipts, and budget consumption all happen per line.</li><li>Store money as <code>NUMERIC(14,2)</code> (never float) and keep <code>currency</code> on every document.</li></ul></div>
+    <div class="card"><h3>Every document table gets</h3><ul><li><code>doc_number</code> from a per-entity, per-year series (<code>PO/2026/00042</code>)</li><li><code>status</code>, <code>created_by</code>, <code>created_at</code>, <code>updated_at</code></li><li><code>org_id</code> for multi-entity isolation</li></ul></div>
+  </div>
+</section>
+
+<!-- 5 -->
+<section class="slide">
+  <div class="eyebrow">State machines</div>
+  <h2>Every document is a state machine</h2>
+  <p class="lead">Never store status as a free string that any code can set. Define allowed transitions and enforce them in one place.</p>
+  <div class="card" style="margin-top:18px"><h3>PR</h3>
+    <div class="state"><span>DRAFT</span><em>→</em><span>SUBMITTED</span><em>→</em><span>APPROVED</span><em>→</em><span>CONVERTED</span></div>
+    <div class="state"><span>SUBMITTED</span><em>→</em><span>RETURNED</span> <em>/</em> <span>REJECTED</span></div>
+  </div>
+  <div class="card" style="margin-top:14px"><h3>PO</h3>
+    <div class="state"><span>DRAFT</span><em>→</em><span>PENDING_APPROVAL</span><em>→</em><span>APPROVED</span><em>→</em><span>SENT</span><em>→</em><span>PARTIALLY_RECEIVED</span><em>→</em><span>CLOSED</span></div>
+  </div>
+  <div class="card" style="margin-top:14px"><h3>Invoice</h3>
+    <div class="state"><span>CAPTURED</span><em>→</em><span>EXTRACTED</span><em>→</em><span>MATCHED</span><em>→</em><span>APPROVED</span><em>→</em><span>SCHEDULED</span><em>→</em><span>PAID</span></div>
+    <div class="state"><span>MATCHED</span><em>→</em><span>EXCEPTION</span><em>→</em><span>RESOLVED</span> <em>/</em> <span>REJECTED</span></div>
+  </div>
+  <div class="callout"><p>Implement one generic <code>transition(doc, from, to, actor, reason)</code> function that validates the move, writes the audit log, and fires notifications. Every module reuses it.</p></div>
+</section>
+
+<!-- 6 -->
+<section class="slide">
+  <div class="eyebrow">The engine room</div>
+  <h2>Approval workflow engine</h2>
+  <div class="cols c2">
+    <div class="card"><h3>Design: rules + instances</h3>
+      <pre style="margin-top:8px">approval_rules
+  doc_type      "PR" | "PO" | "INVOICE"
+  conditions    {amount_min, amount_max,
+                 department?, category?}
+  steps         [{order, approver_role
+                  | approver_user, sla_hours}]
+
+approval_instances
+  doc_id, rule_id, current_step
+  actions[] {step, user, decision,
+             comment, timestamp}</pre>
+    </div>
+    <div class="card"><h3>Behaviour to implement</h3>
+      <ul>
+        <li>On submit: evaluate rules top-down, pick first matching, create instance</li>
+        <li>Approve → advance step; final step → doc becomes <code>APPROVED</code></li>
+        <li>Reject → back to requester with mandatory comment</li>
+        <li><strong>SLA breach</strong> → reminder, then escalate to approver's manager</li>
+        <li><strong>Delegation</strong>: out-of-office table redirects tasks</li>
+        <li><strong>SoD check</strong>: requester ≠ approver, enforced in code</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout"><p>This one engine powers the "Pending approvals" KPI, the Inbox, and the touchless rate (auto-approve rule for amounts under a threshold). Build it well, build it once.</p></div>
+</section>
+
+<!-- 7 -->
+<section class="slide">
+  <div class="eyebrow">Security model</div>
+  <h2>Roles, permissions, multi-entity</h2>
+  <table>
+    <tr><th>Role</th><th>Can do</th><th>Cannot do</th></tr>
+    <tr><td>Requester</td><td>Create PRs, view own documents</td><td>Approve anything, see other depts' spend</td></tr>
+    <tr><td>Approver / Manager</td><td>Approve within DOA, view team documents</td><td>Edit vendor bank details</td></tr>
+    <tr><td>Buyer (Procurement)</td><td>RFQs, POs, vendor onboarding</td><td>Approve own POs, execute payments</td></tr>
+    <tr><td>Stores</td><td>Create GRNs</td><td>Touch invoices or POs</td></tr>
+    <tr><td>AP Accountant</td><td>Invoices, matching, payment proposals</td><td>Approve payments (maker only)</td></tr>
+    <tr><td>Finance Controller</td><td>Approve payments, tolerances, budgets</td><td>—</td></tr>
+    <tr><td>Admin / Auditor</td><td>Config / read-everything + audit log</td><td>Auditor: any write</td></tr>
+  </table>
+  <div class="callout"><p>Every query is scoped by <code>org_id</code> (the entity switcher in the top bar). Permissions = role → set of <code>module:action</code> strings checked in middleware. Keep it boring and explicit.</p></div>
+</section>
+
+<!-- 8 -->
+<section class="slide">
+  <div class="eyebrow">API design</div>
+  <h2>REST endpoints — a representative slice</h2>
+  <pre>
+POST   /api/prs                     <span class="c"># create draft PR</span>
+POST   /api/prs/:id/submit          <span class="c"># state transition, starts approval</span>
+POST   /api/approvals/:id/decision  <span class="c"># {decision: "approve"|"reject", comment}</span>
+POST   /api/rfqs                    <span class="c"># from approved PR lines</span>
+POST   /api/rfqs/:id/quotes         <span class="c"># record vendor quote (or AI-extracted)</span>
+POST   /api/rfqs/:id/award          <span class="c"># {vendor_id, reason} → drafts PO</span>
+POST   /api/pos/:id/send            <span class="c"># email PDF to vendor, status → SENT</span>
+POST   /api/grns                    <span class="c"># against PO lines</span>
+POST   /api/invoices/ingest         <span class="c"># from email watcher (Module 3)</span>
+POST   /api/invoices/:id/match      <span class="c"># run 2/3-way match, returns exceptions</span>
+POST   /api/payment-runs            <span class="c"># proposal from due invoices</span>
+GET    /api/dashboard?from=&to=     <span class="c"># all KPI cards in one call</span></pre>
+  <div class="cols c2">
+    <div class="card"><h3>Conventions</h3><ul><li>State changes are <strong>verbs as sub-resources</strong> (<code>/submit</code>, <code>/award</code>) — not PATCHing a status field</li><li>Idempotency keys on ingest & payment endpoints</li><li>Cursor pagination on all lists</li></ul></div>
+    <div class="card"><h3>Validation lives server-side</h3><ul><li>Budget check on PR submit</li><li>SoD check on approval</li><li>Qty billed ≤ qty accepted on match</li><li>UI checks are convenience only</li></ul></div>
+  </div>
+</section>
+
+<!-- 9 -->
+<section class="slide">
+  <div class="eyebrow">The homepage</div>
+  <h2>Computing each dashboard card</h2>
+  <table>
+    <tr><th>Card</th><th>Query sketch (period-filtered)</th></tr>
+    <tr><td>Touchless rate</td><td>invoices where <code>human_touches = 0</code> ÷ all processed invoices. Increment a counter on every manual edit/decision.</td></tr>
+    <tr><td>Pending approvals</td><td><code>count(approval_instances where status='PENDING')</code> — clicking opens the queue</td></tr>
+    <tr><td>Avg cycle time</td><td><code>median(paid_at − received_at)</code> on paid invoices. Note the scope toggle in the UI: AP (receipt→pay) vs full P2P (requisition→pay)</td></tr>
+    <tr><td>Monthly throughput</td><td><code>sum(invoice.total)</code> processed this month</td></tr>
+    <tr><td>MSME at risk</td><td>unpaid invoices of MSME vendors where <code>today − received_at ≥ 35</code> days (warning window before 45)</td></tr>
+    <tr><td>Budget utilization</td><td><code>sum(committed + spent) ÷ sum(allocated)</code></td></tr>
+    <tr><td>PR cycle time</td><td><code>median(decided_at − submitted_at)</code></td></tr>
+    <tr><td>Sourcing savings</td><td><code>(pr_estimate − awarded_value) ÷ pr_estimate</code> over awarded RFQs</td></tr>
+  </table>
+  <div class="callout"><p>Compute these in SQL with a single date-range parameter; cache for 60s. The "cycle time trend" chart is the same median grouped by week for 12 weeks.</p></div>
+</section>
+
+<!-- 10 -->
+<section class="slide">
+  <div class="eyebrow">Cross-cutting</div>
+  <h2>Notifications, files, audit</h2>
+  <div class="cols c3">
+    <div class="card"><h3>Inbox & notifications</h3><ul><li>One <code>notifications</code> table: user, type, doc link, read flag</li><li>Events: task assigned, approved/rejected, exception raised, SLA breach, MSME warning</li><li>In-app bell + daily email digest is enough for v1</li></ul></div>
+    <div class="card"><h3>Documents & files</h3><ul><li>Store PDFs (invoices, quotes, PO prints) in object storage; DB keeps metadata + SHA-256 hash</li><li>Hash catches duplicate invoice files instantly</li><li>Generate PO/remittance PDFs from HTML templates</li></ul></div>
+    <div class="card"><h3>Audit log</h3><ul><li>Append-only, no update/delete grants</li><li>Row: actor, entity, action, before → after JSON, IP, timestamp</li><li>Written inside the same DB transaction as the change</li><li>This is a feature (sidebar: "Audit Log"), not just plumbing</li></ul></div>
+  </div>
+</section>
+
+<!-- 11 -->
+<section class="slide">
+  <div class="eyebrow">Quality</div>
+  <h2>Testing a workflow system</h2>
+  <div class="cols c2">
+    <div class="card"><h3>Where tests pay off most</h3>
+      <ul>
+        <li><strong>State machine</strong>: every illegal transition rejected</li>
+        <li><strong>Approval rules</strong>: boundary amounts (₹25,000 vs ₹25,001), delegation, SoD</li>
+        <li><strong>Matching engine</strong>: table-driven tests — a CSV of PO/GRN/invoice combos with expected outcomes</li>
+        <li><strong>Budget math</strong>: committed/accrued/spent across the whole lifecycle</li>
+      </ul>
+    </div>
+    <div class="card"><h3>Practices</h3>
+      <ul>
+        <li>Seed script that creates a demo org: 5 users, 10 vendors, 20 items, budgets — so every feature is demoable in one command</li>
+        <li>One end-to-end "golden path" test: PR → pay</li>
+        <li>Feature branches + PR review (ask a senior to review weekly)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 12 -->
+<section class="slide">
+  <div class="eyebrow">Your plan</div>
+  <h2>Milestone roadmap — build in this order</h2>
+  <table>
+    <tr><th>Phase</th><th>Weeks</th><th>Deliverable</th></tr>
+    <tr><td>0 · Foundation</td><td>1–2</td><td>Auth, orgs, roles, vendors + items CRUD, audit log, number series, seed script</td></tr>
+    <tr><td>1 · Procure</td><td>3–5</td><td>Budgets, PR with approval engine, PR→PO conversion, PO PDF + email to vendor</td></tr>
+    <tr><td>2 · Receive & match</td><td>6–7</td><td>GRN entry, manual invoice entry, 2/3-way matching engine + exception queue</td></tr>
+    <tr><td>3 · Pay</td><td>8–9</td><td>Payment runs, TDS, advances & adjustment, MSME ageing, dashboard v1</td></tr>
+    <tr><td>4 · AI (Module 3)</td><td>10–12</td><td>Email invoice ingestion + AI extraction; AI RFQ comparison & award recommendation</td></tr>
+    <tr><td>5 · ERP (Module 4)</td><td>13–14</td><td>Zoho Books sync: vendors, bills, payments; reconciliation report</td></tr>
+  </table>
+  <div class="callout"><p><strong>Rule:</strong> each phase ends with a demo to your manager using the seed data. Working software beats perfect architecture. Next: <strong>Module 3 — AI modules</strong>.</p></div>
+</section>
+
+</div>
+<div class="nav">
+  <span class="counter" id="counter"></span>
+  <button id="prev" aria-label="Previous slide">←</button>
+  <button id="next" aria-label="Next slide">→</button>
+</div>
+<script>
+const slides=[...document.querySelectorAll('.slide')];let i=0;
+function show(n){i=Math.max(0,Math.min(slides.length-1,n));slides.forEach((s,k)=>s.classList.toggle('active',k===i));
+document.getElementById('bar').style.width=((i+1)/slides.length*100)+'%';
+document.getElementById('counter').textContent=(i+1)+' / '+slides.length;location.hash=i+1;}
+document.getElementById('next').onclick=()=>show(i+1);
+document.getElementById('prev').onclick=()=>show(i-1);
+addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' ')show(i+1);if(e.key==='ArrowLeft')show(i-1);});
+show(parseInt(location.hash.slice(1))-1||0);
+</script>
+</body>
+</html>

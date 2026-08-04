@@ -1,0 +1,4 @@
+[browser] Failed to fetch RSC payload for http://localhost:3000/dashboard. Falling back to browser navigation. TypeError: Failed to fetch
+    at createFetch (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_client_0trjvdb._.js:8207:21)
+    at async fetchServerResponse (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_client_0trjvdb._.js:8051:21)
+    at async fetchMissingDynamicData (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_client_0trjvdb._.js:9464:24) (file://C:/Users/ashri/Documents/code/new invoice processsor software/p2p-app/.next/dev/static/chunks/1emj_next_dist_client_0trjvdb._.js:8128:21)

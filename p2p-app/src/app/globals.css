@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+:root {
+  --ink: #16214e;
+  --ink-soft: #3d4b7d;
+  --paper: #f4f6fa;
+  --card: #ffffff;
+  --pink: #e23d7b;
+  --teal: #0e9384;
+  --amber: #b45309;
+  --line: #d7ddeb;
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-paper: var(--paper);
+  --color-card: var(--card);
+  --color-pink: var(--pink);
+  --color-teal: var(--teal);
+  --color-amber: var(--amber);
+  --color-line: var(--line);
+  --font-sans: var(--font-ibm-plex-sans);
+  --font-mono: var(--font-ibm-plex-mono);
+  --font-display: var(--font-archivo);
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-ibm-plex-sans), system-ui, sans-serif;
+}

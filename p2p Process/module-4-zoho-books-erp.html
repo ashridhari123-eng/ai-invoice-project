@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 4 · ERP with Zoho Books — Concepts & Integration</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#16214E; --ink-soft:#3D4B7D; --paper:#F4F6FA; --card:#FFFFFF;
+  --pink:#E23D7B; --teal:#0E9384; --amber:#B45309; --line:#D7DDEB;
+  --mono:'IBM Plex Mono',monospace; --body:'IBM Plex Sans',sans-serif; --disp:'Archivo',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:var(--body);background:var(--paper);color:var(--ink);overflow:hidden}
+.progress{position:fixed;top:0;left:0;height:4px;background:var(--pink);width:0;z-index:50;transition:width .25s ease}
+.deck{position:relative;height:100vh;width:100vw}
+.slide{position:absolute;inset:0;padding:64px 84px 96px;display:none;flex-direction:column;overflow:auto}
+.slide.active{display:flex}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--pink);margin-bottom:14px;font-weight:600}
+h1{font-family:var(--disp);font-weight:900;font-size:clamp(40px,5.4vw,68px);line-height:1.02;letter-spacing:-.02em;margin-bottom:20px}
+h2{font-family:var(--disp);font-weight:800;font-size:clamp(28px,3.4vw,42px);line-height:1.05;letter-spacing:-.015em;margin-bottom:22px}
+h3{font-family:var(--disp);font-weight:700;font-size:18px;margin-bottom:8px}
+p.lead{font-size:19px;line-height:1.55;color:var(--ink-soft);max-width:62ch}
+p,li{font-size:15.5px;line-height:1.55;color:var(--ink-soft)}
+li{margin-bottom:8px}
+ul,ol{padding-left:20px;margin-top:6px}
+strong{color:var(--ink);font-weight:600}
+.cols{display:grid;gap:22px;margin-top:22px}
+.cols.c2{grid-template-columns:1fr 1fr}
+.cols.c3{grid-template-columns:1fr 1fr 1fr}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px 22px}
+.stamp{display:inline-block;font-family:var(--mono);font-weight:600;font-size:12px;letter-spacing:.12em;color:var(--pink);border:2px solid var(--pink);border-radius:6px;padding:3px 9px;transform:rotate(-3deg);background:rgba(226,61,123,.05)}
+table{border-collapse:collapse;width:100%;margin-top:18px;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:14.5px}
+th{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;text-align:left;padding:12px 16px;background:var(--ink);color:#fff;font-weight:600}
+td{padding:11px 16px;border-top:1px solid var(--line);color:var(--ink-soft);line-height:1.45;vertical-align:top}
+td:first-child{color:var(--ink);font-weight:600}
+code,.mono{font-family:var(--mono);font-size:.92em;background:rgba(22,33,78,.06);padding:1px 6px;border-radius:4px;color:var(--ink)}
+pre{font-family:var(--mono);font-size:12.5px;line-height:1.55;background:#101733;color:#DCE4FF;border-radius:10px;padding:18px 20px;overflow:auto;margin-top:14px}
+pre .c{color:#7D8BC4}
+.callout{border-left:4px solid var(--teal);background:rgba(14,147,132,.07);border-radius:0 10px 10px 0;padding:16px 20px;margin-top:20px}
+.callout.warn{border-color:var(--amber);background:rgba(180,83,9,.07)}
+.callout p{color:var(--ink)}
+.footer-note{margin-top:auto;padding-top:24px;font-family:var(--mono);font-size:12px;color:#8B94B8;letter-spacing:.05em}
+.nav{position:fixed;bottom:20px;right:24px;display:flex;gap:8px;align-items:center;z-index:60}
+.nav button{font-family:var(--mono);font-size:14px;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);border-radius:8px;padding:8px 14px;cursor:pointer}
+.nav button:hover{background:var(--ink);color:#fff}
+.nav button:focus-visible{outline:3px solid var(--pink);outline-offset:2px}
+.counter{font-family:var(--mono);font-size:12.5px;color:var(--ink-soft);margin-right:6px}
+.home{position:fixed;bottom:20px;left:24px;font-family:var(--mono);font-size:12.5px;color:var(--ink-soft);text-decoration:none;z-index:60;border-bottom:1px dashed var(--ink-soft)}
+.home:hover{color:var(--pink);border-color:var(--pink)}
+@media (max-width:900px){.slide{padding:40px 26px 96px}.cols.c2,.cols.c3{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.progress{transition:none}}
+</style>
+</head>
+<body>
+<div class="progress" id="bar"></div>
+<a class="home" href="index.html">← learning path</a>
+<div class="deck" id="deck">
+
+<!-- 1 -->
+<section class="slide">
+  <div class="eyebrow">Module 4 of 4 · Self-study · ~2.5 hours</div>
+  <h1>ERP Integration<br>with Zoho Books</h1>
+  <p class="lead">Your P2P app runs the process; the ERP keeps the books. Zoho Books is our learning ERP: small enough to master in a weekend, real enough to teach every integration lesson — OAuth, entity mapping, idempotency, and reconciliation.</p>
+  <div class="footer-note">Note: API names/endpoints below reflect Zoho's documented patterns — always verify against the current official docs at zoho.com/books/api before coding.</div>
+</section>
+
+<!-- 2 -->
+<section class="slide">
+  <div class="eyebrow">Concepts</div>
+  <h2>What an ERP is (through accounting eyes)</h2>
+  <div class="cols c2">
+    <div class="card"><h3>The ERP's job</h3>
+      <ul>
+        <li>Maintain the <strong>general ledger</strong> — every financial event as a double-entry journal</li>
+        <li><strong>Chart of accounts</strong>: the tree of ledger accounts (expenses, assets, liabilities…)</li>
+        <li>Accounts payable subledger: what we owe each vendor</li>
+        <li>Statutory outputs: GST returns, TDS reports, financial statements</li>
+      </ul>
+    </div>
+    <div class="card"><h3>What happens when an invoice is booked</h3>
+      <pre style="margin-top:8px">Dr  Expense / Inventory      10,000
+Dr  GST Input Credit          1,800
+    Cr  Vendor (AP)                  11,800
+
+<span class="c"># and on payment (with 2% TDS on services):</span>
+Dr  Vendor (AP)              11,800
+    Cr  Bank                         11,600
+    Cr  TDS Payable                     200</pre>
+    </div>
+  </div>
+  <div class="callout"><p>You don't need to be an accountant — but knowing that "pushing a bill" creates these journal lines explains why the ERP demands account codes, tax codes, and dates on everything you send it.</p></div>
+</section>
+
+<!-- 3 -->
+<section class="slide">
+  <div class="eyebrow">Vocabulary mapping</div>
+  <h2>Your app ↔ Zoho Books dictionary</h2>
+  <table>
+    <tr><th>Your P2P app</th><th>Zoho Books object</th><th>Notes</th></tr>
+    <tr><td>Vendor</td><td><code>Contact</code> (contact_type: vendor)</td><td>Holds GSTIN ("GST treatment"), payment terms, bank details</td></tr>
+    <tr><td>Item (catalog)</td><td><code>Item</code></td><td>HSN/SAC, default purchase account & tax</td></tr>
+    <tr><td>Purchase Order</td><td><code>Purchase Order</code></td><td>Zoho has POs too — decide who owns them (next slide)</td></tr>
+    <tr><td>Vendor invoice</td><td><code>Bill</code></td><td>The AP document; "Invoice" in Zoho means a <em>sales</em> invoice!</td></tr>
+    <tr><td>Payment</td><td><code>Vendor Payment</code> / <code>Payment Made</code></td><td>Applied against one or more bills</td></tr>
+    <tr><td>Advance</td><td>Vendor advance / prepayment</td><td>Later applied to bills</td></tr>
+    <tr><td>Credit note from vendor</td><td><code>Vendor Credit</code></td><td>Offsets bills</td></tr>
+    <tr><td>Budget / cost centre</td><td>Tags / reporting tags</td><td>Zoho's dimension mechanism</td></tr>
+  </table>
+  <div class="callout warn"><p>Biggest beginner trap: in accounting software, <strong>"Invoice" = money coming in, "Bill" = money going out</strong>. Your vendor invoices become Zoho <em>Bills</em>.</p></div>
+</section>
+
+<!-- 4 -->
+<section class="slide">
+  <div class="eyebrow">Architecture decision</div>
+  <h2>System of record: who owns what?</h2>
+  <table>
+    <tr><th>Data</th><th>Owner (source of truth)</th><th>Direction</th></tr>
+    <tr><td>Vendors</td><td>Your P2P app (onboarding, maker-checker)</td><td>Push to Zoho on activate/update</td></tr>
+    <tr><td>PR, RFQ, quotes, GRN</td><td>Your P2P app only</td><td>Never sent — ERP doesn't care</td></tr>
+    <tr><td>Purchase Orders</td><td>Your P2P app</td><td>Optionally mirrored to Zoho for reporting</td></tr>
+    <tr><td>Bills (approved invoices)</td><td>Created in your app → <strong>booked in Zoho</strong></td><td>Push after final AP approval</td></tr>
+    <tr><td>Payments</td><td>Executed in Zoho / bank</td><td><strong>Pull back</strong> into your app to close the loop & feed KPIs</td></tr>
+    <tr><td>Chart of accounts, tax codes</td><td>Zoho Books</td><td>Pull into your app for dropdowns</td></tr>
+  </table>
+  <div class="callout"><p><strong>The clean boundary:</strong> everything <em>before</em> "invoice approved" lives in your app; everything <em>accounting</em> lives in Zoho. Each record you push stores the returned Zoho ID (<code>bill_id</code>, <code>contact_id</code>) — that link is the backbone of sync and reconciliation.</p></div>
+</section>
+
+<!-- 5 -->
+<section class="slide">
+  <div class="eyebrow">API basics</div>
+  <h2>Zoho Books API — the shape of it</h2>
+  <div class="cols c2">
+    <div class="card"><h3>Fundamentals</h3>
+      <ul>
+        <li>REST + JSON, base like <code>https://www.zohoapis.in/books/v3</code> (region-specific: .in / .com / .eu)</li>
+        <li>Every call needs <code>organization_id</code> — one Zoho org per legal entity (your entity switcher maps here)</li>
+        <li>Auth: <strong>OAuth 2.0</strong> via Zoho's accounts server</li>
+        <li>Rate limits apply per org/plan — design for backoff</li>
+      </ul>
+    </div>
+    <div class="card"><h3>OAuth flow (server-based)</h3>
+      <ol>
+        <li>Register a client in Zoho API Console → client id/secret</li>
+        <li>Redirect admin to Zoho consent URL with scopes like <code>ZohoBooks.contacts.ALL, ZohoBooks.bills.ALL</code></li>
+        <li>Receive <code>code</code> → exchange for <strong>access token</strong> (~1h) + <strong>refresh token</strong> (long-lived)</li>
+        <li>Store refresh token encrypted; refresh access tokens automatically</li>
+      </ol>
+    </div>
+  </div>
+  <pre>
+POST https://accounts.zoho.in/oauth/v2/token
+  ?refresh_token=...&client_id=...&client_secret=...&grant_type=refresh_token
+
+<span class="c"># then call the API:</span>
+GET /books/v3/contacts?organization_id=10234695
+Authorization: Zoho-oauthtoken 1000.xxxx.yyyy</pre>
+</section>
+
+<!-- 6 -->
+<section class="slide">
+  <div class="eyebrow">Sync 1 · Vendors</div>
+  <h2>Pushing a vendor to Zoho</h2>
+  <pre>
+POST /books/v3/contacts?organization_id={org}
+{
+  "contact_name": "Sharma Industrial Supplies",
+  "contact_type": "vendor",
+  "company_name": "Sharma Industrial Supplies Pvt Ltd",
+  "gst_no": "27AAACS1234F1Z5",
+  "gst_treatment": "business_gst",
+  "payment_terms": 30,
+  "billing_address": { "address": "Plot 12, MIDC", "city": "Pune",
+                       "state": "Maharashtra", "zip": "411019", "country": "India" }
+}
+<span class="c"># response → { "contact": { "contact_id": "460000000026049", ... } }</span>
+<span class="c"># store contact_id on your vendor row</span></pre>
+  <div class="cols c2">
+    <div class="card"><h3>Sync rules</h3><ul><li>Push on vendor <strong>activation</strong>, re-push on approved edits</li><li>If push fails, mark vendor <code>sync_pending</code> and retry via job queue — never block the user</li><li>Match existing Zoho contacts by GSTIN before creating (avoid duplicates)</li></ul></div>
+    <div class="card"><h3>Idempotency</h3><p>Keep a <code>sync_log</code> table: entity, direction, payload hash, zoho_id, status, attempts. Before any create, check if this record already has a zoho_id. Retries must <strong>update</strong>, never re-create.</p></div>
+  </div>
+</section>
+
+<!-- 7 -->
+<section class="slide">
+  <div class="eyebrow">Sync 2 · Bills</div>
+  <h2>Booking an approved invoice as a Bill</h2>
+  <pre>
+POST /books/v3/bills?organization_id={org}
+{
+  "vendor_id": "460000000026049",          <span class="c"># the stored contact_id</span>
+  "bill_number": "SIS/2026/0187",          <span class="c"># vendor's invoice number</span>
+  "date": "2026-07-21",
+  "due_date": "2026-08-20",
+  "reference_number": "PO/2026/00042",     <span class="c"># your PO number — the audit thread</span>
+  "line_items": [
+    { "name": "Bearing 6205-ZZ", "quantity": 90, "rate": 50.00,
+      "hsn_or_sac": "84821011", "tax_id": "GST18_TAX_ID",
+      "account_id": "CONSUMABLES_EXPENSE_ACCT" }
+  ],
+  "is_tds_applicable": false
+}</pre>
+  <div class="cols c2">
+    <div class="card"><h3>Trigger point</h3><p>Push <strong>only after</strong> the invoice reaches <code>APPROVED</code> in your app (matched + approved). Zoho should never see unmatched invoices — your app is the quality gate.</p></div>
+    <div class="card"><h3>Field mapping to prepare</h3><ul><li><code>tax_id</code>: pull Zoho's tax list once, map GST rates → tax_ids</li><li><code>account_id</code>: map your purchase categories → expense accounts (config screen in your app)</li></ul></div>
+  </div>
+</section>
+
+<!-- 8 -->
+<section class="slide">
+  <div class="eyebrow">Sync 3 · Payments back</div>
+  <h2>Closing the loop: pull payment status</h2>
+  <div class="cols c2">
+    <div class="card"><h3>Two mechanisms</h3>
+      <ul>
+        <li><strong>Polling</strong>: a job every 15–30 min — <code>GET /bills?status=paid&last_modified_time=...</code> and <code>GET /vendorpayments</code>; update your invoices to <code>PAID</code> with date & reference</li>
+        <li><strong>Webhooks</strong>: Zoho can POST to your endpoint on events — faster, but always keep polling as the safety net (webhooks get missed)</li>
+      </ul>
+    </div>
+    <div class="card"><h3>What this unlocks</h3>
+      <ul>
+        <li>The <strong>cycle time</strong> KPI (receipt → payment) finally has its end timestamp</li>
+        <li><strong>MSME at risk</strong> clears automatically when payment lands</li>
+        <li>"Pay this week" panel = your due invoices minus what Zoho says is already paid</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout warn"><p>Webhook endpoints must validate the source (shared secret), be idempotent (the same event may arrive twice), and reply 200 fast — do the work in a background job.</p></div>
+</section>
+
+<!-- 9 -->
+<section class="slide">
+  <div class="eyebrow">Trust but verify</div>
+  <h2>Error handling & reconciliation</h2>
+  <div class="cols c2">
+    <div class="card"><h3>Integration hygiene</h3>
+      <ul>
+        <li>Exponential backoff on HTTP 429/5xx; alert after N failures</li>
+        <li>Log every request/response (redact tokens) in the sync_log</li>
+        <li>Handle Zoho validation errors as <em>actionable exceptions</em> shown to the AP user ("tax_id invalid — check GST mapping")</li>
+        <li>Version your mappings; a chart-of-accounts change in Zoho shouldn't silently break pushes</li>
+      </ul>
+    </div>
+    <div class="card"><h3>Nightly reconciliation report</h3>
+      <ul>
+        <li>Invoices <code>APPROVED</code> in your app with no Zoho <code>bill_id</code> → stuck pushes</li>
+        <li>Zoho bills with no matching record in your app → someone bypassed the process (booked directly in Zoho)</li>
+        <li>Amount differences between paired records → data drift</li>
+        <li>Surface all three lists in the Reports module</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout"><p>Reconciliation is what makes finance trust your integration. "The numbers tie out every morning" is worth more than any feature.</p></div>
+</section>
+
+<!-- 10 -->
+<section class="slide">
+  <div class="eyebrow">Hands-on</div>
+  <h2>Learning lab: a weekend with Zoho Books</h2>
+  <ol style="margin-top:8px">
+    <li><strong>Sign up</strong> for a Zoho Books trial org. Manually walk one full cycle in the UI: create a vendor → PO → convert to bill → record payment. Watch what the journal report shows after each step.</li>
+    <li>Create a client in the <strong>Zoho API Console</strong>; use a self-client/temporary grant to get tokens; call <code>GET /contacts</code> from curl or Postman.</li>
+    <li>Script it: push one vendor, push one bill against it, then fetch it back and print its status.</li>
+    <li>Break it on purpose: push the same bill twice, use a wrong tax_id, expire your token mid-run — and handle each failure the way slides 6–9 prescribe.</li>
+  </ol>
+  <div class="callout"><p>Everything here transfers: swap Zoho for Tally, SAP, Oracle or Dynamics later and the concepts — OAuth/auth, entity mapping, system-of-record boundaries, idempotent sync, reconciliation — are identical. Only field names change.</p></div>
+</section>
+
+<!-- 11 -->
+<section class="slide">
+  <div class="eyebrow">Graduation</div>
+  <h2>Capstone: your definition of done</h2>
+  <div class="cols c2">
+    <div class="card"><h3>The demo that proves mastery</h3>
+      <p>In one sitting, show your manager the full thread on seed data:</p>
+      <ol>
+        <li>Raise a PR → approve per DOA</li>
+        <li>Float an RFQ to 3 vendors → AI comparison → award → PO emailed</li>
+        <li>Record a partial GRN</li>
+        <li>Email a PDF invoice to the watch mailbox → AI extraction → 3-way match raises a qty exception → resolve it</li>
+        <li>Approve → bill lands in Zoho Books → record payment in Zoho → status flows back → dashboard updates</li>
+      </ol>
+    </div>
+    <div class="card"><h3>You're now the domain expert when you can…</h3>
+      <ul>
+        <li>Explain why an invoice is blocked, using document evidence, in under a minute</li>
+        <li>Trace any rupee on the dashboard back to source documents</li>
+        <li>Say precisely where AI helps, where rules decide, and where humans approve</li>
+        <li>Tie out your app vs Zoho with the reconciliation report</li>
+      </ul>
+      <p style="margin-top:12px"><strong>Go build. Ship a phase every two weeks.</strong></p>
+    </div>
+  </div>
+</section>
+
+</div>
+<div class="nav">
+  <span class="counter" id="counter"></span>
+  <button id="prev" aria-label="Previous slide">←</button>
+  <button id="next" aria-label="Next slide">→</button>
+</div>
+<script>
+const slides=[...document.querySelectorAll('.slide')];let i=0;
+function show(n){i=Math.max(0,Math.min(slides.length-1,n));slides.forEach((s,k)=>s.classList.toggle('active',k===i));
+document.getElementById('bar').style.width=((i+1)/slides.length*100)+'%';
+document.getElementById('counter').textContent=(i+1)+' / '+slides.length;location.hash=i+1;}
+document.getElementById('next').onclick=()=>show(i+1);
+document.getElementById('prev').onclick=()=>show(i-1);
+addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' ')show(i+1);if(e.key==='ArrowLeft')show(i-1);});
+show(parseInt(location.hash.slice(1))-1||0);
+</script>
+</body>
+</html>

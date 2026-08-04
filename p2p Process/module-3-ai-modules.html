@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 3 · AI Modules — RFQ Comparison, Invoice Extraction & Matching</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#16214E; --ink-soft:#3D4B7D; --paper:#F4F6FA; --card:#FFFFFF;
+  --pink:#E23D7B; --teal:#0E9384; --amber:#B45309; --line:#D7DDEB;
+  --mono:'IBM Plex Mono',monospace; --body:'IBM Plex Sans',sans-serif; --disp:'Archivo',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:var(--body);background:var(--paper);color:var(--ink);overflow:hidden}
+.progress{position:fixed;top:0;left:0;height:4px;background:var(--pink);width:0;z-index:50;transition:width .25s ease}
+.deck{position:relative;height:100vh;width:100vw}
+.slide{position:absolute;inset:0;padding:64px 84px 96px;display:none;flex-direction:column;overflow:auto}
+.slide.active{display:flex}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--pink);margin-bottom:14px;font-weight:600}
+h1{font-family:var(--disp);font-weight:900;font-size:clamp(40px,5.4vw,68px);line-height:1.02;letter-spacing:-.02em;margin-bottom:20px}
+h2{font-family:var(--disp);font-weight:800;font-size:clamp(28px,3.4vw,42px);line-height:1.05;letter-spacing:-.015em;margin-bottom:22px}
+h3{font-family:var(--disp);font-weight:700;font-size:18px;margin-bottom:8px}
+p.lead{font-size:19px;line-height:1.55;color:var(--ink-soft);max-width:62ch}
+p,li{font-size:15.5px;line-height:1.55;color:var(--ink-soft)}
+li{margin-bottom:8px}
+ul,ol{padding-left:20px;margin-top:6px}
+strong{color:var(--ink);font-weight:600}
+.cols{display:grid;gap:22px;margin-top:22px}
+.cols.c2{grid-template-columns:1fr 1fr}
+.cols.c3{grid-template-columns:1fr 1fr 1fr}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px 22px}
+.stamp{display:inline-block;font-family:var(--mono);font-weight:600;font-size:12px;letter-spacing:.12em;color:var(--pink);border:2px solid var(--pink);border-radius:6px;padding:3px 9px;transform:rotate(-3deg);background:rgba(226,61,123,.05)}
+.stamp.teal{color:var(--teal);border-color:var(--teal);background:rgba(14,147,132,.06)}
+.stamp.amber{color:var(--amber);border-color:var(--amber);background:rgba(180,83,9,.06)}
+table{border-collapse:collapse;width:100%;margin-top:18px;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:14.5px}
+th{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;text-align:left;padding:12px 16px;background:var(--ink);color:#fff;font-weight:600}
+td{padding:11px 16px;border-top:1px solid var(--line);color:var(--ink-soft);line-height:1.45;vertical-align:top}
+td:first-child{color:var(--ink);font-weight:600}
+code,.mono{font-family:var(--mono);font-size:.92em;background:rgba(22,33,78,.06);padding:1px 6px;border-radius:4px;color:var(--ink)}
+pre{font-family:var(--mono);font-size:12.5px;line-height:1.55;background:#101733;color:#DCE4FF;border-radius:10px;padding:18px 20px;overflow:auto;margin-top:14px}
+pre .c{color:#7D8BC4}
+.callout{border-left:4px solid var(--teal);background:rgba(14,147,132,.07);border-radius:0 10px 10px 0;padding:16px 20px;margin-top:20px}
+.callout.warn{border-color:var(--amber);background:rgba(180,83,9,.07)}
+.callout p{color:var(--ink)}
+.footer-note{margin-top:auto;padding-top:24px;font-family:var(--mono);font-size:12px;color:#8B94B8;letter-spacing:.05em}
+.nav{position:fixed;bottom:20px;right:24px;display:flex;gap:8px;align-items:center;z-index:60}
+.nav button{font-family:var(--mono);font-size:14px;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);border-radius:8px;padding:8px 14px;cursor:pointer}
+.nav button:hover{background:var(--ink);color:#fff}
+.nav button:focus-visible{outline:3px solid var(--pink);outline-offset:2px}
+.counter{font-family:var(--mono);font-size:12.5px;color:var(--ink-soft);margin-right:6px}
+.home{position:fixed;bottom:20px;left:24px;font-family:var(--mono);font-size:12.5px;color:var(--ink-soft);text-decoration:none;z-index:60;border-bottom:1px dashed var(--ink-soft)}
+.home:hover{color:var(--pink);border-color:var(--pink)}
+.pipe{display:flex;align-items:stretch;gap:10px;flex-wrap:wrap;margin-top:22px}
+.pipe .box{flex:1;min-width:130px;background:var(--card);border:1.5px solid var(--line);border-radius:10px;padding:14px;text-align:center}
+.pipe .box b{display:block;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--pink);margin-bottom:6px}
+.pipe .box small{font-size:12.5px;color:var(--ink-soft);line-height:1.4;display:block}
+.pipe .a{align-self:center;color:var(--line);font-weight:800;font-size:18px}
+@media (max-width:900px){.slide{padding:40px 26px 96px}.cols.c2,.cols.c3{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.progress{transition:none}}
+</style>
+</head>
+<body>
+<div class="progress" id="bar"></div>
+<a class="home" href="index.html">← learning path</a>
+<div class="deck" id="deck">
+
+<!-- 1 -->
+<section class="slide">
+  <div class="eyebrow">Module 3 of 4 · Self-study · ~3 hours</div>
+  <h1>The AI Modules</h1>
+  <p class="lead">Two AI-powered features turn a workflow tool into a "command center": <strong>(A)</strong> comparing RFQ responses and recommending an award, and <strong>(B)</strong> extracting invoices from email for automated 2/3-way matching. Both follow the same philosophy: <em>AI proposes, humans approve, rules verify.</em></p>
+  <div class="footer-note">Prerequisites: Modules 1 & 2. You'll need an Anthropic API key for the exercises.</div>
+</section>
+
+<!-- 2 -->
+<section class="slide">
+  <div class="eyebrow">Philosophy first</div>
+  <h2>Where AI belongs in P2P — and where it doesn't</h2>
+  <div class="cols c2">
+    <div class="card"><h3><span class="stamp teal">AI IS GREAT AT</span></h3>
+      <ul>
+        <li>Reading unstructured documents: invoice PDFs, quote emails, scanned images → structured JSON</li>
+        <li>Normalising messy vendor language ("free delivery above 50k", "90 days credit")</li>
+        <li>Summarising trade-offs between quotes and drafting a recommendation with reasons</li>
+        <li>Flagging anomalies: unusual prices, near-duplicate invoices, odd vendor behaviour</li>
+      </ul>
+    </div>
+    <div class="card"><h3><span class="stamp amber">AI MUST NOT</span></h3>
+      <ul>
+        <li>Approve spend or release payments — a human always makes the final award/pay decision</li>
+        <li>Be the only validation — deterministic rules (totals add up, GSTIN format, qty ≤ received) always run <em>after</em> extraction</li>
+        <li>Operate without confidence scores and a human-review fallback</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout"><p><strong>Pattern to remember:</strong> LLM for <em>understanding</em>, code for <em>arithmetic and rules</em>, humans for <em>judgement</em>. Never let the LLM do the maths that your matching engine can do exactly.</p></div>
+</section>
+
+<!-- 3 -->
+<section class="slide">
+  <div class="eyebrow">AI Module A · <span class="stamp">RFQ</span></div>
+  <h2>A. Quote comparison — the problem</h2>
+  <p class="lead">Three vendors reply to your RFQ, each in their own format: one fills your form, one sends a PDF, one writes prices in an email body. The buyer needs a fair, side-by-side comparison and a defensible decision.</p>
+  <table>
+    <tr><th></th><th>Vendor A</th><th>Vendor B</th><th>Vendor C</th></tr>
+    <tr><td>Unit price (100 units)</td><td>₹480</td><td>₹455</td><td>₹470</td></tr>
+    <tr><td>Freight</td><td>Included</td><td>₹2,500 extra</td><td>Included</td></tr>
+    <tr><td>Payment terms</td><td>Net 45</td><td>100% advance</td><td>Net 30</td></tr>
+    <tr><td>Delivery</td><td>7 days</td><td>21 days</td><td>10 days</td></tr>
+    <tr><td>Warranty</td><td>1 year</td><td>6 months</td><td>1 year</td></tr>
+  </table>
+  <div class="callout warn"><p>B has the lowest unit price — but add freight, the cash-flow cost of 100% advance, and 3-week delivery, and B may be the <em>worst</em> offer. Naive lowest-price comparison is the bug your AI module exists to fix.</p></div>
+</section>
+
+<!-- 4 -->
+<section class="slide">
+  <div class="eyebrow">AI Module A</div>
+  <h2>Step 1 — Normalise every quote to landed cost</h2>
+  <div class="cols c2">
+    <div class="card"><h3>Deterministic (code, not AI)</h3>
+      <pre style="margin-top:8px">landed_unit_cost =
+  unit_price
+  + (freight + packing + other) / qty
+  + non_creditable_taxes / qty
+
+<span class="c"># payment-terms adjustment (cost of capital, e.g. 12%/yr)</span>
+cash_cost = amount × rate × (advance_days / 365)</pre>
+      <p style="margin-top:10px">GST that you can claim as input credit is usually <em>excluded</em> from comparison — compare pre-tax landed cost unless credit isn't available.</p>
+    </div>
+    <div class="card"><h3>Where AI helps</h3>
+      <ul>
+        <li>Extracting these fields from each vendor's PDF/email into one schema (same technique as invoice extraction — slide 8)</li>
+        <li>Interpreting fuzzy terms: "freight free above ₹50,000", "2/10 net 30", "ex-works Pune"</li>
+        <li>Flagging what a vendor <em>didn't</em> quote (missing warranty, no validity date) so the buyer can chase it</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 5 -->
+<section class="slide">
+  <div class="eyebrow">AI Module A</div>
+  <h2>Step 2 — Score with weighted criteria</h2>
+  <div class="cols c2">
+    <div class="card"><h3>Weighted scoring model</h3>
+      <table style="margin-top:6px">
+        <tr><th>Criterion</th><th>Weight</th><th>Scoring</th></tr>
+        <tr><td>Landed cost</td><td>50%</td><td>lowest = 100; others = lowest ÷ price × 100</td></tr>
+        <tr><td>Delivery time</td><td>20%</td><td>fastest = 100, linear scale</td></tr>
+        <tr><td>Payment terms</td><td>15%</td><td>more credit days = higher</td></tr>
+        <tr><td>Vendor rating</td><td>15%</td><td>from past OTIF % & quality history</td></tr>
+      </table>
+      <p style="margin-top:10px">Weights are <strong>configurable per category</strong> — urgent spares weight delivery higher; commodities weight price higher.</p>
+    </div>
+    <div class="card"><h3>Step 3 — LLM writes the recommendation</h3>
+      <p>Feed the normalised table + scores to the LLM and ask for a structured recommendation:</p>
+      <pre style="margin-top:8px">{
+ "recommended_vendor": "Vendor C",
+ "reasoning": "Lowest total landed cost after
+   freight; Net 30 terms; 10-day delivery
+   meets the need-by date. Vendor B's advance
+   payment adds ₹4.1k cash cost and delivery
+   misses the deadline.",
+ "risks": ["C's quote valid only 15 days"],
+ "negotiation_tips": ["Ask A to match ₹470"]
+}</pre>
+    </div>
+  </div>
+  <div class="callout"><p>The buyer sees the comparison grid + AI recommendation, can override with a reason, and clicks <strong>Award</strong>. The decision + reasoning is stored — that's your audit trail and the "Sourcing savings" number.</p></div>
+</section>
+
+<!-- 6 -->
+<section class="slide">
+  <div class="eyebrow">AI Module B · <span class="stamp">INV</span></div>
+  <h2>B. Invoice capture from email — the pipeline</h2>
+  <div class="pipe">
+    <div class="box"><b>1 · WATCH</b><small>Dedicated mailbox e.g. invoices@co.com — poll IMAP or use Gmail/Graph API push</small></div>
+    <span class="a">→</span>
+    <div class="box"><b>2 · INGEST</b><small>Pull attachments (PDF/images), hash file, store in object storage, create invoice in CAPTURED state</small></div>
+    <span class="a">→</span>
+    <div class="box"><b>3 · EXTRACT</b><small>Send document to LLM with a strict JSON schema → structured invoice + confidence</small></div>
+    <span class="a">→</span>
+    <div class="box"><b>4 · VALIDATE</b><small>Deterministic checks: totals, GSTIN, duplicates, vendor lookup</small></div>
+    <span class="a">→</span>
+    <div class="box"><b>5 · MATCH</b><small>2/3-way match vs PO & GRN; pass → auto-approve route; fail → exception queue</small></div>
+  </div>
+  <div class="cols c2">
+    <div class="card"><h3>Ingestion details</h3><ul><li>Idempotency: <code>message_id + file hash</code> unique key — the same email processed twice must not create two invoices</li><li>Non-invoice attachments (signatures, T&Cs) — let the classifier step drop them</li><li>Keep the raw email + file forever; link them to the invoice record</li></ul></div>
+    <div class="card"><h3>This is the "Inbox" in the sidebar</h3><p>The reference app's <strong>Inbox</strong> is exactly this: a queue of captured emails/documents awaiting extraction review. Show original PDF on the left, extracted fields on the right, differences highlighted.</p></div>
+  </div>
+</section>
+
+<!-- 7 -->
+<section class="slide">
+  <div class="eyebrow">AI Module B</div>
+  <h2>Extraction: schema-first prompting</h2>
+  <pre>
+<span class="c"># Python — Anthropic API, PDF in, JSON out</span>
+import anthropic, base64, json
+client = anthropic.Anthropic()  <span class="c"># key from env ANTHROPIC_API_KEY</span>
+
+pdf_b64 = base64.b64encode(open("invoice.pdf","rb").read()).decode()
+
+msg = client.messages.create(
+  model="claude-sonnet-4-6", max_tokens=2000,
+  messages=[{"role":"user","content":[
+    {"type":"document","source":{"type":"base64",
+     "media_type":"application/pdf","data":pdf_b64}},
+    {"type":"text","text":"""Extract this vendor invoice. Respond with ONLY
+JSON matching this schema, no prose:
+{"vendor_name":str, "vendor_gstin":str|null, "invoice_number":str,
+ "invoice_date":"YYYY-MM-DD", "po_number":str|null, "currency":str,
+ "lines":[{"description":str,"hsn_sac":str|null,"qty":num,
+           "unit_price":num,"tax_rate_pct":num,"line_total":num}],
+ "subtotal":num, "cgst":num, "sgst":num, "igst":num,
+ "grand_total":num, "confidence":0-1,
+ "notes":"anything ambiguous or unreadable"}
+Use null for missing fields. Never guess a PO number."""}]}])
+
+data = json.loads(msg.content[0].text)</pre>
+  <div class="callout"><p><strong>Schema-first</strong> = the prompt is mostly a JSON contract. "Never guess" instructions + a <code>notes</code> field for ambiguity dramatically reduce hallucinated values.</p></div>
+</section>
+
+<!-- 8 -->
+<section class="slide">
+  <div class="eyebrow">AI Module B</div>
+  <h2>Validate before you trust</h2>
+  <div class="cols c2">
+    <div class="card"><h3>Deterministic checks (code)</h3>
+      <ul>
+        <li><strong>Arithmetic</strong>: Σ line totals = subtotal; subtotal + taxes = grand total (re-compute, don't trust)</li>
+        <li><strong>GSTIN</strong>: 15-char format check; matches a vendor in your master</li>
+        <li><strong>Duplicate</strong>: same vendor + invoice number, or same file hash, or same (vendor, amount, date) → block</li>
+        <li><strong>Date sanity</strong>: not in the future, not 2 years old</li>
+        <li><strong>PO exists</strong> and belongs to this vendor</li>
+      </ul>
+    </div>
+    <div class="card"><h3>Confidence routing</h3>
+      <table style="margin-top:6px">
+        <tr><th>Condition</th><th>Route</th></tr>
+        <tr><td>confidence ≥ 0.9 and all checks pass</td><td>Straight to matching (touchless path)</td></tr>
+        <tr><td>0.7 – 0.9, or any null critical field</td><td>Human verifies in Inbox side-by-side view</td></tr>
+        <tr><td>&lt; 0.7 or arithmetic fails</td><td>Manual entry; keep the sample for prompt improvement</td></tr>
+      </table>
+      <p style="margin-top:10px">Log every human correction — that's your accuracy dataset.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 9 -->
+<section class="slide">
+  <div class="eyebrow">AI Module B</div>
+  <h2>The matching engine (deterministic core)</h2>
+  <pre>
+<span class="c"># 3-way match, per invoice line — pseudocode</span>
+def match_invoice(inv):
+    po = find_po(inv.po_number, inv.vendor_id)          <span class="c"># header link</span>
+    exceptions = []
+    for line in inv.lines:
+        po_line = best_po_line(line, po)                 <span class="c"># see below</span>
+        if not po_line: exceptions.add(line, "NO_PO_LINE"); continue
+        accepted = sum(g.accepted_qty for g in grns(po_line)) - already_billed(po_line)
+        if line.qty > accepted + qty_tol(po_line):       exceptions.add(line,"QTY_OVER_RECEIPT")
+        if abs(line.unit_price - po_line.price) > price_tol(po_line):
+                                                          exceptions.add(line,"PRICE_MISMATCH")
+        if line.tax_rate != po_line.tax_rate:             exceptions.add(line,"TAX_MISMATCH")
+    return "MATCHED" if not exceptions else ("EXCEPTION", exceptions)</pre>
+  <div class="cols c2">
+    <div class="card"><h3>Line pairing is the hard part</h3><p>Vendors rename items ("HP Laptop 15s" vs "Laptop HP-15s-fq5111TU"). Pair by: PO line ref if quoted → item code → fuzzy description similarity + same qty/price. An LLM call is a good <em>tie-breaker</em> for ambiguous pairs — but the qty/price comparison stays in code.</p></div>
+    <div class="card"><h3>Exception queue UX</h3><p>Each exception shows the three documents side by side with the conflicting numbers highlighted, and actions: <strong>accept variance</strong> (with reason, within authority), <strong>request credit note</strong>, <strong>return to vendor</strong>, <strong>edit pairing</strong>. Every action → audit log.</p></div>
+  </div>
+</section>
+
+<!-- 10 -->
+<section class="slide">
+  <div class="eyebrow">Making it trustworthy</div>
+  <h2>Measure, guard, improve</h2>
+  <div class="cols c3">
+    <div class="card"><h3>Evaluation set</h3><p>Collect 30–50 real invoices (anonymise if needed) with hand-verified "golden" JSON. After any prompt/model change, run the set and score field-level accuracy. Target: &gt;95% on invoice number, date, totals; &gt;90% on lines.</p></div>
+    <div class="card"><h3>Guardrails</h3><ul><li>API keys server-side only, never in frontend</li><li>Cap spend: max tokens, retries with backoff, dead-letter queue for failures</li><li>PII care: invoices contain bank details — restrict access by role</li><li>Model output is <em>data</em>, never executed as instructions</li></ul></div>
+    <div class="card"><h3>Improvement loop</h3><ul><li>Weekly: review human corrections, cluster failure types</li><li>Fix with prompt tweaks or a validation rule — retest on the golden set</li><li>Watch the <strong>touchless rate</strong> on your dashboard climb — that's the KPI this whole module moves</li></ul></div>
+  </div>
+</section>
+
+<!-- 11 -->
+<section class="slide">
+  <div class="eyebrow">Hands-on</div>
+  <h2>Exercises before Module 4</h2>
+  <div class="cols c2">
+    <div class="card"><h3>Build</h3>
+      <ol>
+        <li>Write the extraction script from slide 7 and run it on 5 sample invoices (make fake ones in Word if needed). Measure what it gets wrong.</li>
+        <li>Add the arithmetic + duplicate validators.</li>
+        <li>Implement the 3-way match function with a table-driven test of 10 scenarios (perfect match, over-billing, price creep, partial GRN…).</li>
+        <li>Build a landed-cost comparison for the 3-vendor example on slide 3 and have the LLM draft the recommendation.</li>
+      </ol>
+    </div>
+    <div class="card"><h3>Think</h3>
+      <ul>
+        <li>Why must totals be re-computed in code even when the LLM returns them?</li>
+        <li>What happens if a vendor emails the same invoice twice, a week apart, with a rescanned PDF (different hash)? Which validator still catches it?</li>
+        <li>Where exactly does a human sit in each pipeline — and what one metric would prove the AI is safe to trust more?</li>
+      </ul>
+      <p style="margin-top:12px">Then proceed to <strong>Module 4 — ERP integration with Zoho Books</strong>.</p>
+    </div>
+  </div>
+</section>
+
+</div>
+<div class="nav">
+  <span class="counter" id="counter"></span>
+  <button id="prev" aria-label="Previous slide">←</button>
+  <button id="next" aria-label="Next slide">→</button>
+</div>
+<script>
+const slides=[...document.querySelectorAll('.slide')];let i=0;
+function show(n){i=Math.max(0,Math.min(slides.length-1,n));slides.forEach((s,k)=>s.classList.toggle('active',k===i));
+document.getElementById('bar').style.width=((i+1)/slides.length*100)+'%';
+document.getElementById('counter').textContent=(i+1)+' / '+slides.length;location.hash=i+1;}
+document.getElementById('next').onclick=()=>show(i+1);
+document.getElementById('prev').onclick=()=>show(i-1);
+addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' ')show(i+1);if(e.key==='ArrowLeft')show(i-1);});
+show(parseInt(location.hash.slice(1))-1||0);
+</script>
+</body>
+</html>

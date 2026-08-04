@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Procure-to-Pay Developer Bootcamp · Learning Path</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#16214E; --ink-soft:#3D4B7D; --paper:#F4F6FA; --card:#FFFFFF;
+  --pink:#E23D7B; --teal:#0E9384; --line:#D7DDEB;
+  --mono:'IBM Plex Mono',monospace; --body:'IBM Plex Sans',sans-serif; --disp:'Archivo',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--body);background:var(--paper);color:var(--ink);min-height:100vh}
+.wrap{max-width:1060px;margin:0 auto;padding:72px 28px 80px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--pink);margin-bottom:16px;font-weight:600}
+h1{font-family:var(--disp);font-weight:900;font-size:clamp(42px,6vw,74px);line-height:1.0;letter-spacing:-.02em;margin-bottom:22px}
+p.lead{font-size:19px;line-height:1.6;color:var(--ink-soft);max-width:64ch}
+.rail{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:34px 0 10px}
+.rail .stop{font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:.06em;padding:9px 14px;border:2px solid var(--pink);border-radius:8px;background:rgba(226,61,123,.05);color:var(--pink);transform:rotate(-2deg)}
+.rail .stop:nth-child(odd){transform:rotate(2deg)}
+.rail .arr{color:#B9C2DA;font-weight:800;font-size:18px}
+.modules{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:44px}
+a.mod{display:block;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:28px;text-decoration:none;color:var(--ink);transition:transform .15s ease, box-shadow .15s ease;position:relative}
+a.mod:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(22,33,78,.12)}
+a.mod:focus-visible{outline:3px solid var(--pink);outline-offset:3px}
+.mod .num{font-family:var(--mono);font-size:12px;letter-spacing:.14em;color:var(--pink);font-weight:600;margin-bottom:12px}
+.mod h2{font-family:var(--disp);font-weight:800;font-size:24px;letter-spacing:-.01em;margin-bottom:10px}
+.mod p{font-size:14.5px;line-height:1.55;color:var(--ink-soft)}
+.mod .meta{margin-top:16px;font-family:var(--mono);font-size:12px;color:#8B94B8}
+.howto{margin-top:48px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:26px 28px}
+.howto h3{font-family:var(--disp);font-weight:700;font-size:18px;margin-bottom:10px}
+.howto li{font-size:14.5px;line-height:1.6;color:var(--ink-soft);margin-bottom:6px}
+.howto ol{padding-left:20px}
+.howto strong{color:var(--ink)}
+@media (max-width:760px){.modules{grid-template-columns:1fr}.wrap{padding:44px 20px 60px}}
+@media (prefers-reduced-motion:reduce){a.mod{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Developer onboarding · Self-study bootcamp</div>
+  <h1>Procure-to-Pay<br>from zero to shipping</h1>
+  <p class="lead">A four-module path for a developer who's never seen a purchase order — ending with you building an AI-powered P2P application integrated with Zoho Books. Do the modules in order; each one's exercises are the entry ticket to the next.</p>
+
+  <div class="rail" aria-hidden="true">
+    <span class="stop">PR</span><span class="arr">→</span>
+    <span class="stop">RFQ</span><span class="arr">→</span>
+    <span class="stop">PO</span><span class="arr">→</span>
+    <span class="stop">GRN</span><span class="arr">→</span>
+    <span class="stop">INV</span><span class="arr">→</span>
+    <span class="stop">PAID</span>
+  </div>
+
+  <div class="modules">
+    <a class="mod" href="module-1-p2p-fundamentals.html">
+      <div class="num">MODULE 01 · DOMAIN</div>
+      <h2>Procure-to-Pay Fundamentals</h2>
+      <p>The nine-step lifecycle, every document (PR, RFQ, PO, GRN, invoice), approvals & DOA, 2/3-way matching, budgets, GST/TDS/MSME essentials, and the KPIs on the reference dashboard.</p>
+      <div class="meta">17 slides · ~2 hrs · quiz + paper-matching exercise</div>
+    </a>
+    <a class="mod" href="module-2-building-the-app.html">
+      <div class="num">MODULE 02 · ENGINEERING</div>
+      <h2>Building the P2P Application</h2>
+      <p>Turning the dashboard screenshot into a spec: tech stack, data model, document state machines, the approval workflow engine, RBAC, APIs, KPI queries, and a 14-week milestone roadmap.</p>
+      <div class="meta">12 slides · ~3 hrs · design + build exercises</div>
+    </a>
+    <a class="mod" href="module-3-ai-modules.html">
+      <div class="num">MODULE 03 · AI</div>
+      <h2>AI Modules: RFQ Comparison & Invoice Extraction</h2>
+      <p>Landed-cost normalisation and weighted scoring for quote decisions; the email → extraction → validation → 3-way-match pipeline; schema-first prompting, confidence routing, evals, and guardrails.</p>
+      <div class="meta">11 slides · ~3 hrs · working code exercises</div>
+    </a>
+    <a class="mod" href="module-4-zoho-books-erp.html">
+      <div class="num">MODULE 04 · ERP</div>
+      <h2>ERP Integration with Zoho Books</h2>
+      <p>What an ERP does, the app↔Books dictionary (bills ≠ invoices!), system-of-record boundaries, OAuth, pushing vendors & bills, pulling payments, idempotent sync, and reconciliation — plus the capstone demo.</p>
+      <div class="meta">11 slides · ~2.5 hrs · weekend lab + capstone</div>
+    </a>
+  </div>
+
+  <div class="howto">
+    <h3>How to run this bootcamp</h3>
+    <ol>
+      <li><strong>Open any module</strong> in a browser and navigate with the ← → arrow keys (or the buttons bottom-right). Your position is saved in the URL, so you can bookmark mid-module.</li>
+      <li><strong>Do every exercise before advancing.</strong> The paper 3-way match in Module 1 and the extraction script in Module 3 are non-negotiable.</li>
+      <li><strong>Demo after each phase</strong> of the Module 2 roadmap — working software every two weeks.</li>
+      <li><strong>Verify external specifics</strong> (Zoho endpoints, tax rates, MSMED thresholds) against current official sources before relying on them; treat the slides as the map, not the territory.</li>
+    </ol>
+  </div>
+</div>
+</body>
+</html>

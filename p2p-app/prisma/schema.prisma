@@ -1,0 +1,778 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Organization {
+  id        String   @id @default(cuid())
+  code      String   @unique
+  name      String
+  gstin     String?
+  pan       String?
+  address   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users        User[]
+  roles        Role[]
+  vendors      Vendor[]
+  items        Item[]
+  budgets      Budget[]
+  auditLogs    AuditLog[]
+  numberSeries NumberSeries[]
+  requisitions PurchaseRequisition[]
+  purchaseOrders PurchaseOrder[]
+  approvalRules  ApprovalRule[]
+  approvalInstances ApprovalInstance[]
+  notifications Notification[]
+  budgetCommitments BudgetCommitment[]
+  invoices       Invoice[]
+  syncLogs       SyncLog[]
+  zohoConfigs    ZohoConfig[]
+  zohoMappings   ZohoMapping[]
+  rfqs           Rfq[]
+  capturedDocuments CapturedDocument[]
+  advancePayments  AdvancePayment[]
+  advanceApplications AdvanceApplication[]
+  goodsReceipts    GoodsReceipt[]
+}
+
+model Role {
+  id          String   @id @default(cuid())
+  orgId       String
+  code        String
+  name        String
+  description String?
+  permissions String
+  createdAt   DateTime @default(now())
+
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  users        User[]
+
+  @@unique([orgId, code])
+}
+
+model User {
+  id           String    @id @default(cuid())
+  orgId        String
+  email        String
+  name         String
+  passwordHash String
+  roleId       String
+  department   String?
+  isActive     Boolean   @default(true)
+  lastLoginAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  role         Role         @relation(fields: [roleId], references: [id])
+  auditLogs    AuditLog[]
+  requestedRequisitions PurchaseRequisition[] @relation("RequestedRequisitions")
+  notifications Notification[]
+  approvalActions ApprovalAction[]
+  rfqs           Rfq[]       @relation("CreatedRfqs")
+  rfqQuotes      RfqQuote[]  @relation("CreatedRfqQuotes")
+  rfqEvaluations RfqEvaluation[] @relation("EvaluatedRfqs")
+  rfqAwards      RfqAward[]  @relation("AwardedRfqs")
+  capturedDocuments CapturedDocument[] @relation("CreatedCaptures")
+  capturedReviews    CapturedDocument[] @relation("ReviewedCaptures")
+  createdAdvances    AdvancePayment[]  @relation("CreatedAdvances")
+  appliedAdvances    AdvanceApplication[] @relation("AppliedAdvances")
+
+  @@unique([orgId, email])
+}
+
+model Vendor {
+  id               String             @id @default(cuid())
+  orgId            String
+  code             String
+  legalName        String
+  tradeName        String?
+  pan              String
+  gstin            String?
+  email            String?
+  contactPerson    String?
+  msmeNumber       String?
+  msmeType         String?
+  category         String?
+  paymentTermsDays Int                @default(30)
+  currency         String             @default("INR")
+  tdsSection       String?
+  tdsRate          Float?
+  rating           Float              @default(50)
+  status           String             @default("DRAFT")
+  zohoContactId    String?
+  syncStatus       String             @default("NONE")
+  syncError        String?
+  createdById      String?
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+
+  organization Organization         @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  bankAccounts VendorBankAccount[]
+  purchaseOrders PurchaseOrder[]
+  invoices       Invoice[]
+  rfqQuotes      RfqQuote[]
+  rfqAwards      RfqAward[]
+  advances       AdvancePayment[]
+
+  @@unique([orgId, code])
+  @@unique([orgId, pan])
+}
+
+model VendorBankAccount {
+  id            String   @id @default(cuid())
+  vendorId      String
+  accountName   String
+  accountNumber String
+  ifsc          String
+  isPrimary     Boolean  @default(false)
+  status        String   @default("PENDING")
+  createdById   String?
+  approvedById  String?
+  approvedAt    DateTime?
+  createdAt     DateTime @default(now())
+
+  vendor Vendor @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+}
+
+model Item {
+  id                String   @id @default(cuid())
+  orgId             String
+  code              String
+  name              String
+  description       String?
+  hsnSac            String
+  unit              String   @default("each")
+  defaultTaxRatePct Float    @default(0)
+  isActive          Boolean  @default(true)
+  createdById       String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@unique([orgId, code])
+  @@unique([orgId, name])
+}
+
+model Budget {
+  id              String   @id @default(cuid())
+  orgId           String
+  department      String
+  category        String
+  period          String
+  allocatedAmount Float
+  spentAmount     Float    @default(0)
+  createdById     String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  organization Organization        @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  requisitions PurchaseRequisition[]
+  commitments BudgetCommitment[]
+
+  @@unique([orgId, department, category, period])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  orgId      String
+  actorId    String?
+  actorEmail String?
+  entity     String
+  entityId   String?
+  action     String
+  beforeJson String?
+  afterJson  String?
+  ip         String?
+  createdAt  DateTime @default(now())
+
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  actor        User?        @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([orgId, entity, entityId])
+  @@index([orgId, createdAt])
+}
+
+model NumberSeries {
+  id         String @id @default(cuid())
+  orgId      String
+  entity     String
+  year       Int
+  lastNumber Int    @default(0)
+
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@unique([orgId, entity, year])
+}
+
+model ApprovalRule {
+  id          String   @id @default(cuid())
+  orgId       String
+  docType     String
+  name        String
+  priority    Int      @default(100)
+  conditions  String
+  steps       String
+  isActive    Boolean  @default(true)
+  createdById String?
+  createdAt   DateTime @default(now())
+
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  instances    ApprovalInstance[]
+
+  @@index([orgId, docType, isActive])
+}
+
+model ApprovalInstance {
+  id            String    @id @default(cuid())
+  orgId         String
+  docType       String
+  docId         String
+  ruleId        String?
+  status        String    @default("PENDING")
+  currentStep   Int       @default(1)
+  submittedById String?
+  amount        Float     @default(0)
+  department    String?
+  decidedAt     DateTime?
+  createdAt     DateTime  @default(now())
+
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  rule         ApprovalRule? @relation(fields: [ruleId], references: [id])
+  actions      ApprovalAction[]
+
+  @@index([orgId, docType, docId])
+  @@index([status])
+}
+
+model ApprovalAction {
+  id         String   @id @default(cuid())
+  instanceId String
+  step       Int
+  actorId    String
+  decision   String
+  comment    String?
+  createdAt  DateTime @default(now())
+
+  instance ApprovalInstance @relation(fields: [instanceId], references: [id], onDelete: Cascade)
+  actor    User             @relation(fields: [actorId], references: [id])
+
+  @@index([instanceId])
+}
+
+model PurchaseRequisition {
+  id                   String    @id @default(cuid())
+  orgId                String
+  code                 String
+  requesterId          String
+  department           String
+  budgetId             String?
+  status               String    @default("DRAFT")
+  expectedDeliveryDate DateTime?
+  notes                String?
+  totalAmount          Float     @default(0)
+  submittedAt          DateTime?
+  decidedAt            DateTime?
+  createdById          String?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  organization         Organization       @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  requester            User               @relation("RequestedRequisitions", fields: [requesterId], references: [id])
+  budget               Budget?            @relation(fields: [budgetId], references: [id])
+  lines                RequisitionLine[]
+  purchaseOrders       PurchaseOrder[]
+  rfqs                 Rfq[]
+
+  @@unique([orgId, code])
+  @@index([orgId, status])
+}
+
+model RequisitionLine {
+  id            String   @id @default(cuid())
+  requisitionId String
+  lineNo        Int
+  itemId        String
+  itemCode      String
+  name          String
+  hsnSac        String
+  qty           Float
+  unit          String
+  unitPrice     Float
+  taxRatePct    Float
+  subtotal      Float
+  taxAmount     Float
+  lineTotal     Float
+
+  requisition PurchaseRequisition @relation(fields: [requisitionId], references: [id], onDelete: Cascade)
+
+  @@unique([requisitionId, lineNo])
+}
+
+model PurchaseOrder {
+  id                String    @id @default(cuid())
+  orgId             String
+  code              String
+  requisitionId     String
+  vendorId          String
+  status            String    @default("DRAFT")
+  currency          String    @default("INR")
+  paymentTermsDays  Int       @default(30)
+  notes             String?
+  subtotal          Float     @default(0)
+  taxAmount         Float     @default(0)
+  totalAmount       Float     @default(0)
+  sentAt            DateTime?
+  sentTo            String?
+  createdById       String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  organization Organization       @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  requisition PurchaseRequisition @relation(fields: [requisitionId], references: [id], onDelete: Restrict)
+  vendor      Vendor              @relation(fields: [vendorId], references: [id], onDelete: Restrict)
+  lines       PurchaseOrderLine[]
+  commitments BudgetCommitment[]
+  invoices    Invoice[]
+  advances    AdvancePayment[]
+  receipts    GoodsReceipt[]
+
+  @@unique([orgId, code])
+  @@index([orgId, status])
+}
+
+model PurchaseOrderLine {
+  id                String  @id @default(cuid())
+  poId              String
+  requisitionLineId String?
+  itemId            String
+  itemCode          String
+  name              String
+  hsnSac            String
+  qty               Float
+  unit              String
+  unitPrice         Float
+  taxRatePct        Float
+  subtotal          Float
+  taxAmount         Float
+  lineTotal         Float
+
+  purchaseOrder PurchaseOrder @relation(fields: [poId], references: [id], onDelete: Cascade)
+  receiptLines  GoodsReceiptLine[]
+
+  @@unique([poId, itemCode])
+}
+
+model GoodsReceipt {
+  id         String   @id @default(cuid())
+  orgId      String
+  code       String
+  poId       String
+  status     String   @default("RECEIVED")
+  receivedBy String?
+  receivedAt DateTime
+  notes      String?
+  createdAt  DateTime @default(now())
+
+  organization  Organization        @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  purchaseOrder PurchaseOrder       @relation(fields: [poId], references: [id], onDelete: Restrict)
+  lines         GoodsReceiptLine[]
+
+  @@unique([orgId, code])
+  @@index([orgId, poId])
+  @@index([orgId, status])
+}
+
+model GoodsReceiptLine {
+  id          String   @id @default(cuid())
+  receiptId   String
+  poLineId    String
+  itemCode    String
+  name        String
+  qtyReceived Float
+  createdAt   DateTime @default(now())
+
+  receipt GoodsReceipt         @relation(fields: [receiptId], references: [id], onDelete: Cascade)
+  poLine  PurchaseOrderLine    @relation(fields: [poLineId], references: [id], onDelete: Restrict)
+
+  @@index([receiptId])
+  @@index([poLineId])
+}
+
+model BudgetCommitment {
+  id            String    @id @default(cuid())
+  orgId         String
+  budgetId      String
+  requisitionId String?
+  poId          String?
+  amount        Float
+  status        String    @default("ACTIVE")
+  createdAt     DateTime  @default(now())
+  releasedAt    DateTime?
+
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  budget        Budget      @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+  purchaseOrder PurchaseOrder? @relation(fields: [poId], references: [id], onDelete: SetNull)
+
+  @@index([budgetId, status])
+}
+
+model Notification {
+  id        String    @id @default(cuid())
+  orgId     String
+  userId    String
+  type      String
+  title     String
+  message   String?
+  docType   String?
+  docId     String?
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, readAt])
+}
+
+model Invoice {
+  id               String    @id @default(cuid())
+  orgId            String
+  code             String
+  vendorId         String
+  poId             String?
+  invoiceNumber    String
+  invoiceDate      DateTime
+  dueDate          DateTime?
+  status           String    @default("RECEIVED")
+  currency         String    @default("INR")
+  notes            String?
+  subtotal         Float     @default(0)
+  taxAmount        Float     @default(0)
+  tdsAmount        Float     @default(0)
+  tdsSection       String?
+  tdsRate          Float?
+  totalAmount      Float     @default(0)
+  zohoBillId       String?
+  zohoBillNumber   String?
+  syncStatus       String    @default("NONE")
+  syncError        String?
+  matchedAt        DateTime?
+  submittedAt      DateTime?
+  decidedAt        DateTime?
+  bookedAt         DateTime?
+  paidAt           DateTime?
+  paymentRef       String?
+  createdById      String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  vendor        Vendor      @relation(fields: [vendorId], references: [id], onDelete: Restrict)
+  purchaseOrder PurchaseOrder? @relation(fields: [poId], references: [id], onDelete: SetNull)
+  lines         InvoiceLine[]
+  captures      CapturedDocument[]
+  advanceApplications AdvanceApplication[]
+
+  @@unique([orgId, code])
+  @@unique([orgId, invoiceNumber])
+  @@index([orgId, status])
+  @@index([orgId, vendorId])
+}
+
+model InvoiceLine {
+  id           String  @id @default(cuid())
+  invoiceId    String
+  lineNo       Int
+  poLineId     String?
+  itemId       String
+  itemCode     String
+  name         String
+  hsnSac       String
+  qty          Float
+  unit         String
+  unitPrice    Float
+  taxRatePct   Float
+  subtotal     Float
+  taxAmount    Float
+  lineTotal    Float
+  matchStatus  String  @default("UNMATCHED")
+  matchNotes   String?
+
+  invoice Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@unique([invoiceId, lineNo])
+  @@index([invoiceId, itemCode])
+}
+
+model SyncLog {
+  id            String   @id @default(cuid())
+  orgId         String
+  entity        String
+  entityId      String
+  direction     String
+  payloadHash   String?
+  zohoId        String?
+  status        String   @default("PENDING")
+  attempts      Int      @default(0)
+  lastError     String?
+  responseJson  String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId, entity, entityId])
+  @@index([orgId, status])
+}
+
+model ZohoConfig {
+  id                 String    @id @default(cuid())
+  orgId              String    @unique
+  region             String    @default("IN")
+  clientId           String
+  clientSecretEnc    String
+  refreshTokenEnc    String
+  accessToken        String?
+  accessTokenExpiresAt DateTime?
+  organizationId     String?
+  scopes             String?
+  isActive           Boolean   @default(false)
+  connectedBy        String?
+  connectedAt        DateTime?
+  lastSyncAt         DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+}
+
+model ZohoMapping {
+  id           String   @id @default(cuid())
+  orgId        String
+  kind         String
+  sourceKey    String
+  sourceLabel  String?
+  targetId     String
+  targetName   String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@unique([orgId, kind, sourceKey])
+  @@index([orgId, kind])
+}
+
+model Rfq {
+  id            String    @id @default(cuid())
+  orgId         String
+  code          String
+  requisitionId String
+  department    String
+  category      String?
+  needByDate    DateTime?
+  status        String    @default("DRAFT")
+  notes         String?
+  createdById   String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  organization Organization       @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  requisition  PurchaseRequisition @relation(fields: [requisitionId], references: [id], onDelete: Restrict)
+  createdBy    User?              @relation("CreatedRfqs", fields: [createdById], references: [id], onDelete: SetNull)
+  lines        RfqLine[]
+  quotes       RfqQuote[]
+  evaluations  RfqEvaluation[]
+  awards       RfqAward[]
+
+  @@unique([orgId, code])
+  @@index([orgId, status])
+}
+
+model RfqLine {
+  id                String  @id @default(cuid())
+  rfqId             String
+  lineNo            Int
+  requisitionLineId String?
+  itemId            String
+  itemCode          String
+  name              String
+  hsnSac            String
+  qty               Float
+  unit              String
+  unitPrice         Float
+
+  rfq    Rfq            @relation(fields: [rfqId], references: [id], onDelete: Cascade)
+  quotes RfqQuoteLine[]
+
+  @@unique([rfqId, lineNo])
+}
+
+model RfqQuote {
+  id               String   @id @default(cuid())
+  rfqId            String
+  vendorId         String
+  status           String   @default("SUBMITTED")
+  currency         String   @default("INR")
+  freight          Float    @default(0)
+  packing          Float    @default(0)
+  otherCharges     Float    @default(0)
+  advancePct       Float    @default(0)
+  creditDays       Int      @default(0)
+  deliveryDays     Int      @default(0)
+  warrantyMonths   Int      @default(0)
+  validityDays     Int      @default(0)
+  notes            String?
+  totalAmount      Float    @default(0)
+  totalLandedAmount Float   @default(0)
+  cashCost         Float    @default(0)
+  createdById      String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  rfq       Rfq        @relation(fields: [rfqId], references: [id], onDelete: Cascade)
+  vendor    Vendor     @relation(fields: [vendorId], references: [id], onDelete: Restrict)
+  createdBy User?      @relation("CreatedRfqQuotes", fields: [createdById], references: [id], onDelete: SetNull)
+  lines     RfqQuoteLine[]
+  awards    RfqAward[]
+
+  @@index([rfqId])
+  @@index([vendorId])
+}
+
+model RfqQuoteLine {
+  id             String @id @default(cuid())
+  quoteId        String
+  rfqLineId      String?
+  lineNo         Int
+  itemCode       String
+  name           String
+  qty            Float
+  unit           String
+  unitPrice      Float
+  subtotal       Float
+  landedUnitCost Float
+  lineTotal      Float
+
+  quote   RfqQuote @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+  rfqLine RfqLine? @relation(fields: [rfqLineId], references: [id], onDelete: SetNull)
+
+  @@unique([quoteId, lineNo])
+}
+
+model RfqEvaluation {
+  id                  String   @id @default(cuid())
+  rfqId               String
+  scoresJson          String
+  recommendationJson  String
+  evaluatorId         String?
+  createdAt           DateTime @default(now())
+
+  rfq       Rfq   @relation(fields: [rfqId], references: [id], onDelete: Cascade)
+  evaluator User? @relation("EvaluatedRfqs", fields: [evaluatorId], references: [id], onDelete: SetNull)
+
+  @@index([rfqId])
+}
+
+model RfqAward {
+  id             String    @id @default(cuid())
+  rfqId          String
+  quoteId        String
+  vendorId       String
+  overrideReason String?
+  awardedById    String?
+  awardedAt      DateTime  @default(now())
+  poId           String?
+
+  rfq       Rfq       @relation(fields: [rfqId], references: [id], onDelete: Cascade)
+  quote     RfqQuote  @relation(fields: [quoteId], references: [id], onDelete: Restrict)
+  vendor    Vendor    @relation(fields: [vendorId], references: [id], onDelete: Restrict)
+  awardedBy User?     @relation("AwardedRfqs", fields: [awardedById], references: [id], onDelete: SetNull)
+
+  @@index([rfqId])
+  @@index([vendorId])
+}
+
+model CapturedDocument {
+  id             String    @id @default(cuid())
+  orgId          String
+  status         String    @default("CAPTURED")
+  fileName       String
+  originalName   String
+  mimeType       String
+  fileHash       String
+  sizeBytes      Int
+  storedPath     String
+  extractedJson  String?
+  confidence     Float?
+  validationJson String?
+  route          String?
+  error          String?
+  invoiceId      String?
+  reviewedById   String?
+  reviewedAt     DateTime?
+  createdById    String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  organization Organization       @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  createdBy    User?              @relation("CreatedCaptures", fields: [createdById], references: [id], onDelete: SetNull)
+  reviewedBy   User?              @relation("ReviewedCaptures", fields: [reviewedById], references: [id], onDelete: SetNull)
+  invoice      Invoice?           @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
+
+  @@unique([orgId, fileHash])
+  @@index([orgId, status])
+}
+
+model AdvancePayment {
+  id          String   @id @default(cuid())
+  orgId       String
+  code        String
+  vendorId    String
+  poId        String?
+  amount      Float
+  currency    String   @default("INR")
+  advanceDate DateTime
+  reference   String?
+  status      String   @default("RECORDED")
+  notes       String?
+  createdById String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  vendor       Vendor       @relation(fields: [vendorId], references: [id], onDelete: Restrict)
+  purchaseOrder PurchaseOrder? @relation(fields: [poId], references: [id], onDelete: SetNull)
+  createdBy    User?        @relation("CreatedAdvances", fields: [createdById], references: [id], onDelete: SetNull)
+  applications AdvanceApplication[]
+
+  @@unique([orgId, code])
+  @@index([orgId, status])
+  @@index([orgId, vendorId])
+}
+
+model AdvanceApplication {
+  id          String   @id @default(cuid())
+  orgId       String
+  advanceId   String
+  invoiceId   String
+  amount      Float
+  appliedAt   DateTime @default(now())
+  appliedById String?
+
+  advance  AdvancePayment @relation(fields: [advanceId], references: [id], onDelete: Cascade)
+  invoice  Invoice        @relation(fields: [invoiceId], references: [id], onDelete: Restrict)
+  appliedBy User?         @relation("AppliedAdvances", fields: [appliedById], references: [id], onDelete: SetNull)
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([advanceId])
+  @@index([invoiceId])
+}
