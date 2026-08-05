@@ -1,6 +1,4 @@
 import { NextResponse } from "next/server";
-import { mkdirSync, writeFileSync } from "node:fs";
-import path from "node:path";
 import { db } from "@/lib/db";
 import { requireApiAuth, clientIp } from "@/lib/api";
 import { PERMISSIONS } from "@/lib/roles";
@@ -18,12 +16,6 @@ const EXT: Record<string, string> = {
   "image/jpeg": "jpg",
   "image/webp": "webp",
 };
-
-function uploadDir(): string {
-  const dir = path.join(process.cwd(), "data", "uploads");
-  mkdirSync(dir, { recursive: true });
-  return dir;
-}
 
 export async function GET() {
   const { error, user } = await requireApiAuth(PERMISSIONS.CAPTURES_READ);
@@ -97,6 +89,7 @@ export async function POST(request: Request) {
           fileHash,
           sizeBytes: file.size,
           storedPath: "",
+          storedData: base64,
           createdById: user.id,
         },
       });
@@ -111,13 +104,6 @@ export async function POST(request: Request) {
         ip: clientIp(request),
       });
       return created;
-    });
-
-    const absolute = path.join(uploadDir(), capture.fileName);
-    writeFileSync(absolute, bytes);
-    await db.capturedDocument.update({
-      where: { id: capture.id },
-      data: { storedPath: `data/uploads/${capture.fileName}` },
     });
 
     const result = await db.$transaction(async (tx) => {

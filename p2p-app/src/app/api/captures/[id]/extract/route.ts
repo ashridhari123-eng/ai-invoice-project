@@ -7,6 +7,21 @@ import { PERMISSIONS } from "@/lib/roles";
 import { CAP_ERROR } from "@/lib/captures";
 import { runExtraction } from "@/lib/capture-flow";
 
+function readSourceBytes(capture: {
+  storedData: string | null;
+  storedPath: string;
+}): Buffer | null {
+  if (capture.storedData) {
+    return Buffer.from(capture.storedData, "base64");
+  }
+  if (!capture.storedPath) return null;
+  try {
+    return readFileSync(path.join(process.cwd(), capture.storedPath));
+  } catch {
+    return null;
+  }
+}
+
 export async function POST(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
@@ -21,15 +36,10 @@ export async function POST(
   if (!capture) {
     return NextResponse.json({ error: "Captured document not found" }, { status: 404 });
   }
-  if (!capture.storedPath) {
-    return NextResponse.json({ error: "Source file is missing" }, { status: 400 });
-  }
 
-  let bytes: Buffer;
-  try {
-    bytes = readFileSync(path.join(process.cwd(), capture.storedPath));
-  } catch {
-    return NextResponse.json({ error: "Source file could not be read" }, { status: 400 });
+  const bytes = readSourceBytes(capture);
+  if (!bytes) {
+    return NextResponse.json({ error: "Source file is missing" }, { status: 400 });
   }
 
   try {

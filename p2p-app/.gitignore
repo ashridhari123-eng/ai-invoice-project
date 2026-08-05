@@ -41,4 +41,18 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# prisma
+prisma/dev.db
+prisma/dev.db-journal
+
+# local uploads / runtime data
+data/
+
+# local run artifacts
+*.log
+*.err
+*.pid
+cf-tunnel.*
+
+# generated prisma client
 /src/generated/prisma

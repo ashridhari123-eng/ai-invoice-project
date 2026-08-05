@@ -4,7 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
 }
 
 model Organization {
@@ -711,6 +711,7 @@ model CapturedDocument {
   fileHash       String
   sizeBytes      Int
   storedPath     String
+  storedData     String?
   extractedJson  String?
   confidence     Float?
   validationJson String?
@@ -764,7 +765,7 @@ model AdvanceApplication {
   orgId       String
   advanceId   String
   invoiceId   String
-  amount      Float
+  amount      Float     @default(0)
   appliedAt   DateTime @default(now())
   appliedById String?
 
