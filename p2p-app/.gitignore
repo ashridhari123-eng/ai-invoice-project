@@ -56,3 +56,6 @@ cf-tunnel.*
 
 # generated prisma client
 /src/generated/prisma
+
+.vercel
+.env*
