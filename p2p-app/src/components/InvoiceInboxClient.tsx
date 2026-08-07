@@ -241,7 +241,7 @@ export default function InvoiceInboxClient({
             </Button>
           </div>
           {uploadError ? (
-            <p className="mt-3 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+            <p className="mt-3 rounded-md bg-red-950/60 px-3 py-2 text-sm text-red-400">
               {uploadError}
             </p>
           ) : null}
@@ -249,7 +249,7 @@ export default function InvoiceInboxClient({
       ) : null}
 
       {error ? (
-        <p className="mb-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+        <p className="mb-4 rounded-md bg-red-950/60 px-3 py-2 text-sm text-red-400">
           {error}
         </p>
       ) : null}
@@ -385,7 +385,7 @@ export default function InvoiceInboxClient({
                       {capture.status.replace("_", " ")}
                     </Badge>
                     {capture.error ? (
-                      <p className="mt-1 max-w-[220px] text-[10px] text-red-700">
+                      <p className="mt-1 max-w-[220px] text-[10px] text-red-400">
                         {capture.error}
                       </p>
                     ) : null}
@@ -424,7 +424,7 @@ export default function InvoiceInboxClient({
                                 key={index}
                                 className={`text-[10px] ${
                                   issue.severity === "error"
-                                    ? "text-red-700"
+                                    ? "text-red-400"
                                     : "text-amber-700"
                                 }`}
                               >

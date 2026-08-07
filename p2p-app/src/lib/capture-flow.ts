@@ -3,7 +3,6 @@ import {
   CAP_EXTRACTED,
   CAP_VERIFIED,
   CAP_CONVERTED,
-  CAP_ERROR,
   CAP_REJECTED,
   validateExtraction,
   routeForExtraction,
@@ -13,7 +12,6 @@ import {
   INV_RECEIVED,
   SYNC_NONE,
   NOTIFY_INV_CREATED,
-  MATCH_UNMATCHED,
   matchLine,
   computeTotals,
   computeTdsAmount,
@@ -76,12 +74,6 @@ export function matchExtractedToPoLine(
     }
   }
   return bestScore >= 0.5 ? best : null;
-}
-
-interface CaptureForExtract {
-  id: string;
-  status: string;
-  extractedJson: string | null;
 }
 
 export async function runExtraction(

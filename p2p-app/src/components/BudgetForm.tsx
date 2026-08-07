@@ -61,7 +61,7 @@ export default function BudgetForm({
   return (
     <div>
       {error ? (
-        <p className="mb-3 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
+        <p className="mb-3 rounded-md bg-red-950/60 px-3 py-2 text-sm text-red-300">{error}</p>
       ) : null}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Field label="Department">

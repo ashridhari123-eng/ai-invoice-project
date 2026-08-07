@@ -66,7 +66,7 @@ export default function ConvertToPO({ requisitionId }: { requisitionId: string }
   return (
     <div>
       {error ? (
-        <p className="mb-3 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
+        <p className="mb-3 rounded-md bg-red-950/60 px-3 py-2 text-sm text-red-300">{error}</p>
       ) : null}
 
       <div className="space-y-3">

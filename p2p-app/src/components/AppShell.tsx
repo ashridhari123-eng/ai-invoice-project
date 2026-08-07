@@ -43,7 +43,7 @@ const NAV: { group: string; items: NavItem[] }[] = [
       { label: "Invoice Inbox", href: "/invoice-inbox" },
       { label: "Invoices", href: "/invoices" },
       { label: "Reconciliation", href: "/invoices/reconciliation" },
-      { label: "Payments", href: "#", soon: true },
+      { label: "Payments", href: "/payments" },
     ],
   },
   {
@@ -112,7 +112,7 @@ export default function AppShell({
 
   return (
     <div className="min-h-full">
-      <aside className="fixed inset-y-0 left-0 z-20 flex w-60 flex-col bg-ink">
+      <aside className="fixed inset-y-0 left-0 z-20 flex w-60 flex-col border-r border-line bg-nav">
         <div className="flex h-16 items-center border-b border-white/10 px-5">
           <Logo inverse />
         </div>
@@ -173,7 +173,7 @@ export default function AppShell({
             </div>
             <button
               onClick={handleLogout}
-              className="rounded-md border border-line bg-white px-3 py-1.5 text-xs font-medium text-ink transition-colors hover:border-ink-soft"
+              className="rounded-md border border-line bg-card px-3 py-1.5 text-xs font-medium text-ink transition-colors hover:border-ink-soft"
             >
               Sign out
             </button>

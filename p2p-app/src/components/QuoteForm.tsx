@@ -83,7 +83,7 @@ export default function QuoteForm({
   return (
     <div className="space-y-3">
       {error ? (
-        <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
+        <p className="rounded-md bg-red-950/60 px-3 py-2 text-sm text-red-300">{error}</p>
       ) : null}
 
       <div className="overflow-hidden rounded-md border border-line">

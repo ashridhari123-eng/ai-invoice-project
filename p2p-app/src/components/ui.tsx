@@ -44,11 +44,11 @@ const BUTTON_STYLES: Record<ButtonVariant, string> = {
   primary:
     "bg-pink text-white hover:bg-pink/90 disabled:bg-pink/40 disabled:cursor-not-allowed",
   outline:
-    "border border-line bg-white text-ink hover:border-ink-soft disabled:cursor-not-allowed",
+    "border border-line bg-card text-ink hover:border-ink-soft disabled:cursor-not-allowed",
   ghost:
-    "bg-ink text-white hover:bg-ink-soft disabled:cursor-not-allowed",
+    "bg-nav text-white hover:bg-pink hover:opacity-90 disabled:cursor-not-allowed",
   danger:
-    "bg-red-600 text-white hover:bg-red-700 disabled:bg-red-300 disabled:cursor-not-allowed",
+    "bg-red-600 text-white hover:bg-red-500 disabled:bg-red-900 disabled:cursor-not-allowed",
 };
 
 export function Button({
@@ -72,7 +72,7 @@ export function Input(props: InputHTMLAttributes<HTMLInputElement>) {
   return (
     <input
       className={cn(
-        "w-full rounded-md border border-line bg-white px-3 py-2 text-sm text-ink placeholder:text-ink-soft/60",
+        "w-full rounded-md border border-line bg-card px-3 py-2 text-sm text-ink placeholder:text-ink-soft/60",
         "focus:border-pink focus:outline-none focus:ring-2 focus:ring-pink/20",
       )}
       {...props}
@@ -84,7 +84,7 @@ export function Select(props: SelectHTMLAttributes<HTMLSelectElement>) {
   return (
     <select
       className={cn(
-        "w-full rounded-md border border-line bg-white px-3 py-2 text-sm text-ink",
+        "w-full rounded-md border border-line bg-card px-3 py-2 text-sm text-ink",
         "focus:border-pink focus:outline-none focus:ring-2 focus:ring-pink/20",
       )}
       {...props}
@@ -110,7 +110,7 @@ export function Field({
       </span>
       {children}
       {hint ? <span className="mt-1 block text-xs text-ink-soft">{hint}</span> : null}
-      {error ? <span className="mt-1 block text-xs text-red-600">{error}</span> : null}
+      {error ? <span className="mt-1 block text-xs text-red-400">{error}</span> : null}
     </label>
   );
 }
@@ -120,10 +120,10 @@ type BadgeTone = "teal" | "amber" | "red" | "gray" | "ink" | "blue";
 const BADGE_STYLES: Record<BadgeTone, string> = {
   teal: "bg-teal/10 text-teal",
   amber: "bg-amber/10 text-amber",
-  red: "bg-red-100 text-red-700",
-  gray: "bg-gray-100 text-gray-600",
-  ink: "bg-ink text-white",
-  blue: "bg-blue-100 text-blue-700",
+  red: "bg-red-950/70 text-red-400",
+  gray: "bg-ink/10 text-ink-soft",
+  ink: "bg-nav text-white",
+  blue: "bg-blue-950/70 text-blue-300",
 };
 
 export function Badge({

@@ -104,7 +104,7 @@ export default function ItemTable({
                   <button
                     disabled={busyId === item.id}
                     onClick={() => remove(item.id, item.name)}
-                    className="rounded border border-line px-2 py-1 text-xs font-medium text-red-600 transition-colors hover:bg-red-50"
+                    className="rounded border border-line px-2 py-1 text-xs font-medium text-red-400 transition-colors hover:bg-red-950/60"
                   >
                     Delete
                   </button>

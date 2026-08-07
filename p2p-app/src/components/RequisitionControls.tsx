@@ -88,7 +88,7 @@ export default function RequisitionControls({
   return (
     <div>
       {error ? (
-        <p className="mb-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+        <p className="mb-4 rounded-md bg-red-950/60 px-3 py-2 text-sm text-red-300">
           {error}
         </p>
       ) : null}

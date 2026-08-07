@@ -89,7 +89,7 @@ export default function ZohoConnectPanel({
             "mb-3 rounded-md px-3 py-2 text-sm " +
             (zohoParam === "connected"
               ? "bg-teal/10 text-teal"
-              : "bg-red-100 text-red-700")
+              : "bg-red-950/70 text-red-300")
           }
         >
           {notice}
@@ -127,7 +127,7 @@ export default function ZohoConnectPanel({
               {status.lastSyncAt ? ` · last sync ${formatDateTime(status.lastSyncAt)}` : ""}
             </p>
           ) : null}
-          {error ? <p className="mt-2 text-xs text-red-600">{error}</p> : null}
+          {error ? <p className="mt-2 text-xs text-red-400">{error}</p> : null}
         </div>
 
         {canManage ? (

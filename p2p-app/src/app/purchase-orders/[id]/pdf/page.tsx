@@ -37,7 +37,7 @@ export default async function PurchaseOrderPdfPage({
 
   return (
     <div className="min-h-full bg-paper">
-      <div className="no-print sticky top-0 z-10 flex items-center justify-between border-b border-line bg-white px-6 py-3">
+      <div className="no-print sticky top-0 z-10 flex items-center justify-between border-b border-line bg-card px-6 py-3">
         <p className="font-mono text-xs text-ink-soft">{purchaseOrder.code} · document view</p>
         <PrintButton />
       </div>

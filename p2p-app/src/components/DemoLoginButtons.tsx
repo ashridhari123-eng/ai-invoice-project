@@ -47,7 +47,7 @@ export default function DemoLoginButtons() {
               type="button"
               onClick={() => handleLogin(a.email)}
               disabled={loadingEmail !== null}
-              className="flex w-full items-center justify-between gap-3 rounded-md border border-line bg-white px-3 py-2 text-xs transition-colors hover:border-pink hover:bg-pink/5 disabled:cursor-not-allowed disabled:opacity-60"
+              className="flex w-full items-center justify-between gap-3 rounded-md border border-line bg-card px-3 py-2 text-xs transition-colors hover:border-pink hover:bg-pink/5 disabled:cursor-not-allowed disabled:opacity-60"
             >
               <span className="font-mono text-ink">{a.email}</span>
               <span className="flex items-center gap-1.5 font-medium text-ink">
@@ -58,7 +58,7 @@ export default function DemoLoginButtons() {
         ))}
       </ul>
       {error ? (
-        <p className="mt-3 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+        <p className="mt-3 rounded-md bg-red-950/60 px-3 py-2 text-sm text-red-300">
           {error}
         </p>
       ) : null}

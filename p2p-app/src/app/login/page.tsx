@@ -10,7 +10,7 @@ export default async function LoginPage() {
 
   return (
     <div className="flex min-h-full">
-      <div className="hidden w-1/2 flex-col justify-between bg-ink p-10 lg:flex">
+      <div className="hidden w-1/2 flex-col justify-between bg-nav p-10 lg:flex">
         <Logo inverse />
         <div>
           <h2 className="font-display text-3xl font-bold leading-tight text-white">

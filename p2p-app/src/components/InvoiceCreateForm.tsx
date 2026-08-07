@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { formatINR, formatDateTime } from "@/lib/format";
 import { Button, Input, Select, Field, Card } from "@/components/ui";
@@ -27,12 +27,10 @@ export default function InvoiceCreateForm({
   const router = useRouter();
   const [poId, setPoId] = useState("");
   const [invoiceNumber, setInvoiceNumber] = useState("");
-  const [invoiceDate, setInvoiceDate] = useState("");
+  const [invoiceDate, setInvoiceDate] = useState(() =>
+    new Date().toISOString().slice(0, 10),
+  );
   const [dueDate, setDueDate] = useState("");
-
-  useEffect(() => {
-    setInvoiceDate(new Date().toISOString().slice(0, 10));
-  }, []);
   const [tdsSection, setTdsSection] = useState("");
   const [tdsRate, setTdsRate] = useState("");
   const [notes, setNotes] = useState("");
@@ -76,7 +74,7 @@ export default function InvoiceCreateForm({
   return (
     <form onSubmit={handleSubmit} className="max-w-2xl space-y-4">
       {error ? (
-        <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
+        <p className="rounded-md bg-red-950/60 px-3 py-2 text-sm text-red-300">{error}</p>
       ) : null}
 
       <Card className="space-y-4 p-5">

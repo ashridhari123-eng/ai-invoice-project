@@ -117,7 +117,7 @@ export default async function BudgetsPage() {
                     </Td>
                     <Td
                       className={`text-right font-mono text-sm font-medium ${
-                        exhausted ? "text-red-600" : "text-teal"
+                        exhausted ? "text-red-400" : "text-teal"
                       }`}
                     >
                       {formatINR(available)}

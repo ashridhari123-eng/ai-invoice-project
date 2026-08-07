@@ -1,14 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --ink: #16214e;
-  --ink-soft: #3d4b7d;
-  --paper: #f4f6fa;
-  --card: #ffffff;
-  --pink: #e23d7b;
-  --teal: #0e9384;
-  --amber: #b45309;
-  --line: #d7ddeb;
+  --ink: #dfe5f6;
+  --ink-soft: #95a0c6;
+  --paper: #0a0e1c;
+  --card: #121931;
+  --nav: #0b1226;
+  --pink: #ed5588;
+  --teal: #2fd0b7;
+  --amber: #f0a93a;
+  --line: #26304d;
 }
 
 @theme inline {
@@ -16,6 +17,7 @@
   --color-ink-soft: var(--ink-soft);
   --color-paper: var(--paper);
   --color-card: var(--card);
+  --color-nav: var(--nav);
   --color-pink: var(--pink);
   --color-teal: var(--teal);
   --color-amber: var(--amber);
@@ -29,4 +31,13 @@ body {
   background: var(--paper);
   color: var(--ink);
   font-family: var(--font-ibm-plex-sans), system-ui, sans-serif;
+}
+
+select option {
+  background: var(--card);
+  color: var(--ink);
+}
+
+::selection {
+  background: rgba(237, 85, 132, 0.35);
 }

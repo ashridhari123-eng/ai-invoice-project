@@ -350,7 +350,7 @@ export default function RequisitionForm({
                           type="button"
                           onClick={() => removeLine(l.key)}
                           disabled={lines.length === 1}
-                          className="text-xs text-ink-soft hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-40"
+                          className="text-xs text-ink-soft hover:text-red-400 disabled:cursor-not-allowed disabled:opacity-40"
                           aria-label={`Remove line ${index + 1}`}
                         >
                           Remove
@@ -395,7 +395,7 @@ export default function RequisitionForm({
           </div>
 
           {error ? (
-            <p className="mt-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
+            <p className="mt-4 rounded-md bg-red-950/60 px-3 py-2 text-sm text-red-300">{error}</p>
           ) : null}
 
           <div className="mt-5 flex flex-wrap items-center gap-2">

@@ -37,7 +37,7 @@ export default function PurchaseOrderControls({
   return (
     <div>
       {error ? (
-        <p className="mb-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
+        <p className="mb-4 rounded-md bg-red-950/60 px-3 py-2 text-sm text-red-300">{error}</p>
       ) : null}
 
       {status === "DRAFT" ? (
@@ -55,7 +55,7 @@ export default function PurchaseOrderControls({
         <Link
           href={`/purchase-orders/${id}/pdf`}
           target="_blank"
-          className="inline-flex w-full items-center justify-center gap-1.5 rounded-md border border-line bg-white px-3.5 py-2 text-sm font-medium text-ink transition-colors hover:border-ink-soft"
+          className="inline-flex w-full items-center justify-center gap-1.5 rounded-md border border-line bg-card px-3.5 py-2 text-sm font-medium text-ink transition-colors hover:border-ink-soft"
         >
           {status === "DRAFT" ? "Preview PO / PDF" : "Download PO PDF"}
         </Link>

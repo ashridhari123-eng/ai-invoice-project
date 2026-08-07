@@ -135,7 +135,11 @@ export async function POST(request: Request) {
             })),
           },
           quotes: {
-            create: data.vendorIds.map((vendorId) => ({ vendorId, createdById: user.id })),
+            create: data.vendorIds.map((vendorId) => ({
+              vendorId,
+              createdById: user.id,
+              status: "INVITED",
+            })),
           },
         },
         include: { lines: true, quotes: true, requisition: true },

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Card, CardHeader, Field, Input, Table, Th, Td } from "@/components/ui";
 import { formatINR } from "@/lib/format";
@@ -32,14 +32,12 @@ export default function ReceiptForm({
       lines.map((l) => [l.id, String(l.qty - l.received)]),
     ),
   );
-  const [receivedAt, setReceivedAt] = useState("");
+  const [receivedAt, setReceivedAt] = useState(() =>
+    new Date().toISOString().slice(0, 10),
+  );
   const [notes, setNotes] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-
-  useEffect(() => {
-    setReceivedAt(new Date().toISOString().slice(0, 10));
-  }, []);
 
   async function handleSubmit() {
     setBusy(true);
@@ -135,7 +133,7 @@ export default function ReceiptForm({
 
       <div className="space-y-4 border-t border-line px-5 py-4">
         {error ? (
-          <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
+          <p className="rounded-md bg-red-950/60 px-3 py-2 text-sm text-red-300">{error}</p>
         ) : null}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Field label="Received on">

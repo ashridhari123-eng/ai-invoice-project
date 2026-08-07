@@ -12,7 +12,6 @@ import {
   EmptyState,
   StatusBadge,
 } from "@/components/ui";
-import { ROLE_STORES } from "@/lib/roles";
 
 export default async function ReceiptsPage() {
   const user = await requirePermission(PERMISSIONS.RECEIPTS_READ);

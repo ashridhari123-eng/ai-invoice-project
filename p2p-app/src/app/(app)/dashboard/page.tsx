@@ -82,7 +82,7 @@ export default async function DashboardPage() {
 
   return (
     <div>
-      <div className="mb-6 rounded-lg bg-ink p-6 text-white">
+      <div className="mb-6 rounded-lg bg-nav p-6 text-white">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/50">
           Procure-to-pay
         </p>

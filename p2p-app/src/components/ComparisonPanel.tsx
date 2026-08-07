@@ -148,7 +148,7 @@ export default function ComparisonPanel({
   return (
     <div className="space-y-4">
       {error ? (
-        <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
+        <p className="rounded-md bg-red-950/60 px-3 py-2 text-sm text-red-300">{error}</p>
       ) : null}
 
       <Card>
@@ -295,7 +295,7 @@ export default function ComparisonPanel({
                     {overrideFor === q.id ? (
                       <div className="flex items-center gap-2">
                         <input
-                          className="w-64 rounded-md border border-line bg-white px-3 py-2 text-sm text-ink placeholder:text-ink-soft/60 focus:border-pink focus:outline-none"
+                          className="w-64 rounded-md border border-line bg-card px-3 py-2 text-sm text-ink placeholder:text-ink-soft/60 focus:border-pink focus:outline-none"
                           placeholder="Override reason (required)…"
                           value={overrideReason}
                           onChange={(e) => setOverrideReason(e.target.value)}

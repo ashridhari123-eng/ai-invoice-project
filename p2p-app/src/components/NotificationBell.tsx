@@ -58,7 +58,7 @@ export default function NotificationBell() {
     <div className="relative">
       <button
         onClick={handleOpen}
-        className="relative grid h-9 w-9 place-items-center rounded-md border border-line bg-white text-ink transition-colors hover:border-ink-soft"
+        className="relative grid h-9 w-9 place-items-center rounded-md border border-line bg-card text-ink transition-colors hover:border-ink-soft"
         aria-label="Notifications"
       >
         <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden>
@@ -80,7 +80,7 @@ export default function NotificationBell() {
       {open ? (
         <>
           <div className="fixed inset-0 z-30" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 z-40 mt-2 w-80 overflow-hidden rounded-lg border border-line bg-white shadow-lg">
+          <div className="absolute right-0 z-40 mt-2 w-80 overflow-hidden rounded-lg border border-line bg-card shadow-lg">
             <div className="border-b border-line px-4 py-3">
               <p className="font-display text-sm font-semibold text-ink">
                 Notifications

@@ -118,7 +118,7 @@ export default function ZohoSyncPanel({
       </div>
 
       {error ? (
-        <p className="mt-3 rounded-md bg-red-50 px-3 py-2 text-xs text-red-700">
+        <p className="mt-3 rounded-md bg-red-950/60 px-3 py-2 text-xs text-red-300">
           {error}
         </p>
       ) : null}
@@ -213,7 +213,7 @@ export default function ZohoSyncPanel({
                       <Td className="text-right font-mono text-xs text-ink">
                         {formatINR(d.zoho)}
                       </Td>
-                      <Td className="text-right font-mono text-xs font-semibold text-red-700">
+                      <Td className="text-right font-mono text-xs font-semibold text-red-300">
                         {formatINR(d.delta)}
                       </Td>
                     </tr>

@@ -113,7 +113,7 @@ export default function VendorTable({
                     <button
                       disabled={busyId === v.id}
                       onClick={() => setStatus(v.id, "BLOCKED")}
-                      className="rounded border border-line px-2 py-1 text-xs font-medium text-ink transition-colors hover:border-red-400 hover:text-red-600"
+                      className="rounded border border-line px-2 py-1 text-xs font-medium text-ink transition-colors hover:border-red-400 hover:text-red-400"
                     >
                       Block
                     </button>
@@ -129,7 +129,7 @@ export default function VendorTable({
                   <button
                     disabled={busyId === v.id}
                     onClick={() => remove(v.id, v.legalName)}
-                    className="rounded border border-line px-2 py-1 text-xs font-medium text-red-600 transition-colors hover:bg-red-50"
+                    className="rounded border border-line px-2 py-1 text-xs font-medium text-red-400 transition-colors hover:bg-red-950/60"
                   >
                     Delete
                   </button>

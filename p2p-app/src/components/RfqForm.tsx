@@ -76,12 +76,12 @@ export default function RfqForm({
       <CardHeader title="RFQ details" subtitle="Source requisition and invited vendors" />
       <div className="max-w-2xl space-y-4 px-5 py-5">
         {error ? (
-          <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
+          <p className="rounded-md bg-red-950/60 px-3 py-2 text-sm text-red-300">{error}</p>
         ) : null}
 
         <Field label="Approved requisition">
           <select
-            className="w-full rounded-md border border-line bg-white px-3 py-2 text-sm text-ink focus:border-pink focus:outline-none focus:ring-2 focus:ring-pink/20"
+            className="w-full rounded-md border border-line bg-card px-3 py-2 text-sm text-ink focus:border-pink focus:outline-none focus:ring-2 focus:ring-pink/20"
             value={requisitionId}
             onChange={(e) => setRequisitionId(e.target.value)}
           >
@@ -107,7 +107,7 @@ export default function RfqForm({
                 className={`flex cursor-pointer items-center justify-between rounded-md border px-3 py-2 text-sm transition-colors ${
                   selectedVendors.includes(v.id)
                     ? "border-pink bg-pink/5"
-                    : "border-line bg-white hover:border-ink-soft"
+                    : "border-line bg-card hover:border-ink-soft"
                 }`}
               >
                 <span className="flex items-center gap-2">
